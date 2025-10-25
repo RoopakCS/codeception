@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Codeception 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="glow-text">CODECEPTION</span>
+                <span class="year">2025</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="register.html" class="active">Register</a></li>
+                <li><a href="leaderboard.html">Leaderboard</a></li>
+                <li><a href="puzzle.html">Puzzle Access</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="content-section">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title glow-text">Team Registration</h1>
+                <div class="title-underline"></div>
+                <p class="page-subtitle">Assemble your team and enter the competition</p>
+            </div>
+
+            <div class="form-container">
+                <div class="form-card">
+                    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Processing registration...</p>
+                    </div>
+
+                    <div id="successMessage" class="message success-message" style="display: none;">
+                        <div class="message-icon">✓</div>
+                        <h3>Registration Successful!</h3>
+                        <p>Your team has been registered for Codeception 2025.</p>
+                        <p class="team-code">Your Team Code: <span id="teamCode"></span></p>
+                        <p class="message-note">Save this code! You'll need it to access the puzzle.</p>
+                        <a href="puzzle.html" class="btn btn-primary">
+                            <span>Go to Puzzle Access</span>
+                            <div class="btn-glow"></div>
+                        </a>
+                    </div>
+
+                    <div id="errorMessage" class="message error-message" style="display: none;">
+                        <div class="message-icon">✕</div>
+                        <h3>Registration Failed</h3>
+                        <p id="errorText"></p>
+                    </div>
+
+                    <form id="registrationForm" class="registration-form">
+                        <div class="form-section">
+                            <h3 class="section-title">Team Information</h3>
+                            
+                            <div class="form-group">
+                                <label for="teamName">Team Name *</label>
+                                <input 
+                                    type="text" 
+                                    id="teamName" 
+                                    name="teamName" 
+                                    required 
+                                    placeholder="Enter your team name"
+                                    maxlength="50"
+                                >
+                                <span class="input-focus-border"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="leaderEmail">Team Leader Email *</label>
+                                <input 
+                                    type="email" 
+                                    id="leaderEmail" 
+                                    name="leaderEmail" 
+                                    required 
+                                    placeholder="leader@example.com"
+                                >
+                                <span class="input-focus-border"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="section-title">Team Members (1-3 members total)</h3>
+                            
+                            <div class="form-group">
+                                <label for="member1">Member 1 Name *</label>
+                                <input 
+                                    type="text" 
+                                    id="member1" 
+                                    name="member1" 
+                                    required 
+                                    placeholder="Full name"
+                                    maxlength="50"
+                                >
+                                <span class="input-focus-border"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="member2">Member 2 Name</label>
+                                <input 
+                                    type="text" 
+                                    id="member2" 
+                                    name="member2" 
+                                    placeholder="Full name (optional)"
+                                    maxlength="50"
+                                >
+                                <span class="input-focus-border"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="member3">Member 3 Name</label>
+                                <input 
+                                    type="text" 
+                                    id="member3" 
+                                    name="member3" 
+                                    placeholder="Full name (optional)"
+                                    maxlength="50"
+                                >
+                                <span class="input-focus-border"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">
+                                    I agree to the competition rules and code of conduct *
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">
+                                <span>Register Team</span>
+                                <div class="btn-glow"></div>
+                            </button>
+                            <button type="reset" class="btn btn-outline">
+                                <span>Clear Form</span>
+                            </button>
+                        </div>
+
+                        <p class="form-note">* Required fields</p>
+                    </form>
+                </div>
+
+                <div class="info-sidebar">
+                    <div class="sidebar-card">
+                        <h3>Registration Tips</h3>
+                        <ul>
+                            <li>Choose a memorable team name</li>
+                            <li>Use a valid email address</li>
+                            <li>Teams can have 1-3 members</li>
+                            <li>Save your team code after registration</li>
+                            <li>You'll need the code to access puzzles</li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>What Happens Next?</h3>
+                        <ol>
+                            <li>Submit your registration</li>
+                            <li>Receive your unique team code</li>
+                            <li>Wait for the event to begin</li>
+                            <li>Access puzzles using your code</li>
+                            <li>Compete and climb the leaderboard!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Codeception. All rights reserved. | Powered by Code & Curiosity</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

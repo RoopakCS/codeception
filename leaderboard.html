@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | Codeception 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="glow-text">CODECEPTION</span>
+                <span class="year">2025</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="register.html">Register</a></li>
+                <li><a href="leaderboard.html" class="active">Leaderboard</a></li>
+                <li><a href="puzzle.html">Puzzle Access</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="content-section">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title glow-text">Live Leaderboard</h1>
+                <div class="title-underline"></div>
+                <p class="page-subtitle">Track the top performers in real-time</p>
+            </div>
+
+            <div class="leaderboard-controls">
+                <button id="refreshBtn" class="btn btn-secondary">
+                    <span>🔄 Refresh</span>
+                </button>
+                <div class="update-time">
+                    Last updated: <span id="lastUpdate">Never</span>
+                </div>
+            </div>
+
+            <div id="loadingSpinner" class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading leaderboard data...</p>
+            </div>
+
+            <div id="errorMessage" class="message error-message" style="display: none;">
+                <div class="message-icon">✕</div>
+                <h3>Unable to Load Leaderboard</h3>
+                <p id="errorText">Please try refreshing the page.</p>
+            </div>
+
+            <div id="leaderboardContainer" class="leaderboard-container" style="display: none;">
+                <div class="podium">
+                    <div class="podium-place second" id="podium-2">
+                        <div class="podium-medal">🥈</div>
+                        <div class="podium-team">TBA</div>
+                        <div class="podium-score">---</div>
+                        <div class="podium-rank">2</div>
+                    </div>
+                    <div class="podium-place first" id="podium-1">
+                        <div class="podium-crown">👑</div>
+                        <div class="podium-medal">🥇</div>
+                        <div class="podium-team">TBA</div>
+                        <div class="podium-score">---</div>
+                        <div class="podium-rank">1</div>
+                    </div>
+                    <div class="podium-place third" id="podium-3">
+                        <div class="podium-medal">🥉</div>
+                        <div class="podium-team">TBA</div>
+                        <div class="podium-score">---</div>
+                        <div class="podium-rank">3</div>
+                    </div>
+                </div>
+
+                <div class="leaderboard-table-container">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Team Name</th>
+                                <th>Score</th>
+                                <th>Time Taken</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody">
+                            <!-- Data will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="noDataMessage" class="no-data-message" style="display: none;">
+                    <div class="no-data-icon">📊</div>
+                    <h3>No Teams Yet</h3>
+                    <p>The competition hasn't started or no scores have been recorded yet.</p>
+                    <a href="register.html" class="btn btn-primary">
+                        <span>Register Your Team</span>
+                        <div class="btn-glow"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Codeception. All rights reserved. | Powered by Code & Curiosity</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
