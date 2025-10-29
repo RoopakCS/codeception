@@ -38,31 +38,33 @@
                 <div id="loginSection" class="form-card">
                     <div class="access-header">
                         <div class="access-icon">🔐</div>
-                        <h2>Team Authentication</h2>
-                        <p>Enter your team credentials to access the puzzle</p>
+                        <h2>Participant Login</h2>
+                        <p>Enter your email and participant code to access the puzzle</p>
                     </div>
 
                     <form id="puzzleLoginForm" class="puzzle-login-form">
                         <div class="form-group">
-                            <label for="loginTeamName">Team Name</label>
+                            <label for="loginEmail">Email ID</label>
                             <input 
-                                type="text" 
-                                id="loginTeamName" 
-                                name="loginTeamName" 
+                                type="email" 
+                                id="loginEmail" 
+                                name="loginEmail" 
                                 required 
-                                placeholder="Your registered team name"
+                                placeholder="Your registered email"
                             >
                             <span class="input-focus-border"></span>
                         </div>
 
                         <div class="form-group">
-                            <label for="loginTeamCode">Team Code</label>
+                            <label for="loginParticipantCode">Participant Code</label>
                             <input 
                                 type="text" 
-                                id="loginTeamCode" 
-                                name="loginTeamCode" 
+                                id="loginParticipantCode" 
+                                name="loginParticipantCode" 
                                 required 
-                                placeholder="Code received during registration"
+                                placeholder="Your participant code (e.g., PC1A2B3C)"
+                                style="text-transform: uppercase;"
+                                maxlength="10"
                             >
                             <span class="input-focus-border"></span>
                         </div>
@@ -76,7 +78,7 @@
                     </form>
 
                     <div class="form-footer">
-                        <p>Don't have a team code? <a href="register.html">Register here</a></p>
+                        <p>Don't have an account? <a href="register.html">Register here</a></p>
                     </div>
                 </div>
 
@@ -95,8 +97,8 @@
 
                         <div class="mission-status">
                             <div class="status-item">
-                                <span class="status-label">Team:</span>
-                                <span class="status-value" id="loggedTeamName">---</span>
+                                <span class="status-label">Participant:</span>
+                                <span class="status-value" id="loggedParticipantName">---</span>
                             </div>
                             <div class="status-item">
                                 <span class="status-label">Status:</span>

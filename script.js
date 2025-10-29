@@ -27,16 +27,14 @@ function initRegistrationForm() {
         document.getElementById('loadingSpinner').style.display = 'block';
         document.getElementById('registrationForm').style.display = 'none';
         
-        // Get form data
+        // Get form data (individual participant registration)
         const formData = {
-            teamName: document.getElementById('teamName').value.trim(),
-            leaderEmail: document.getElementById('leaderEmail').value.trim(),
-            members: [
-                document.getElementById('member1').value.trim(),
-                document.getElementById('member2').value.trim(),
-                document.getElementById('member3').value.trim()
-            ].filter(member => member !== ''),
-            registrationDate: new Date().toISOString()
+            name: document.getElementById('name').value.trim(),
+            registerNumber: document.getElementById('registerNumber').value.trim().toUpperCase(),
+            email: document.getElementById('email').value.trim(),
+            department: document.getElementById('department').value,
+            year: document.getElementById('year').value,
+            password: document.getElementById('password').value
         };
         
         try {
@@ -57,11 +55,13 @@ function initRegistrationForm() {
             if (response.ok) {
                 // Show success message
                 document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('teamCode').textContent = result.teamCode;
-                
-                // Store team code in localStorage
-                localStorage.setItem('teamCode', result.teamCode);
-                localStorage.setItem('teamName', formData.teamName);
+                document.getElementById('registeredParticipantCode').textContent = result.participantCode;
+                document.getElementById('registeredName').textContent = result.name;
+
+                // Store participant info in localStorage (do NOT store password)
+                localStorage.setItem('participantCode', result.participantCode);
+                localStorage.setItem('participantEmail', formData.email);
+                localStorage.setItem('participantName', result.name);
             } else {
                 // Show error message
                 document.getElementById('errorMessage').style.display = 'block';
@@ -177,9 +177,10 @@ function updatePodium(scores) {
     positions.forEach((pos, index) => {
         const podiumElement = document.getElementById(`podium-${pos}`);
         if (podiumElement && scores[index]) {
-            const team = scores[index];
-            podiumElement.querySelector('.podium-team').textContent = team.teamName;
-            podiumElement.querySelector('.podium-score').textContent = `${team.score} pts`;
+            const participant = scores[index];
+            const name = participant.name || '---';
+            podiumElement.querySelector('.podium-team').textContent = name;
+            podiumElement.querySelector('.podium-score').textContent = `${participant.score} pts`;
         }
     });
 }
@@ -190,7 +191,7 @@ function updateLeaderboardTable(scores) {
     
     tbody.innerHTML = '';
     
-    scores.forEach((team, index) => {
+    scores.forEach((participant, index) => {
         const rank = index + 1;
         const row = document.createElement('tr');
         
@@ -200,15 +201,16 @@ function updateLeaderboardTable(scores) {
         }
         
         // Format time taken
-        const timeTaken = formatTime(team.timeTaken);
+        const timeTaken = formatTime(participant.timeTaken);
         
         // Determine status
-        const status = team.status || (team.timeTaken ? 'completed' : 'active');
-        
+        const status = participant.status || (participant.timeTaken ? 'completed' : 'active');
+        const displayName = escapeHtml(participant.name || '---');
+
         row.innerHTML = `
             <td>${rank}</td>
-            <td>${escapeHtml(team.teamName)}</td>
-            <td>${team.score}</td>
+            <td>${displayName}</td>
+            <td>${participant.score}</td>
             <td>${timeTaken}</td>
             <td><span class="status-badge ${status}">${status}</span></td>
         `;
@@ -250,12 +252,13 @@ function escapeHtml(text) {
 
 // ===== PUZZLE ACCESS =====
 function initPuzzleAccess() {
-    // Check if user is already logged in
-    const storedTeamCode = localStorage.getItem('teamCode');
-    const storedTeamName = localStorage.getItem('teamName');
+    // Check if participant is already logged in
+    const storedCode = localStorage.getItem('participantCode');
+    const storedEmail = localStorage.getItem('participantEmail');
+    const storedName = localStorage.getItem('participantName');
     
-    if (storedTeamCode && storedTeamName) {
-        showPuzzleSection(storedTeamName);
+    if (storedCode && storedEmail && storedName) {
+        showPuzzleSection(storedName);
     }
     
     // Handle login form
@@ -276,9 +279,8 @@ function initPuzzleAccess() {
 
 async function handlePuzzleLogin(e) {
     e.preventDefault();
-    
-    const teamName = document.getElementById('loginTeamName').value.trim();
-    const teamCode = document.getElementById('loginTeamCode').value.trim();
+    const email = document.getElementById('loginEmail').value.trim();
+    const participantCode = document.getElementById('loginParticipantCode').value.trim().toUpperCase();
     const errorDiv = document.getElementById('loginError');
     
     try {
@@ -288,22 +290,23 @@ async function handlePuzzleLogin(e) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ teamName, teamCode })
+            body: JSON.stringify({ email, participantCode })
         });
         
         const result = await response.json();
         
         if (response.ok && result.valid) {
-            // Store credentials
-            localStorage.setItem('teamCode', teamCode);
-            localStorage.setItem('teamName', teamName);
-            
+            // Store participant info (never store password)
+            localStorage.setItem('participantCode', participantCode);
+            localStorage.setItem('participantEmail', email);
+            localStorage.setItem('participantName', result.name);
+
             // Show puzzle section
-            showPuzzleSection(teamName);
+            showPuzzleSection(result.name);
         } else {
             // Show error
             if (errorDiv) {
-                errorDiv.textContent = result.message || 'Invalid team name or code. Please try again.';
+                errorDiv.textContent = result.message || 'Invalid email or participant code. Please try again.';
                 errorDiv.style.display = 'block';
                 
                 setTimeout(() => {
@@ -324,20 +327,21 @@ async function handlePuzzleLogin(e) {
     }
 }
 
-function showPuzzleSection(teamName) {
+function showPuzzleSection(participantName) {
     const loginSection = document.getElementById('loginSection');
     const puzzleSection = document.getElementById('puzzleSection');
-    const loggedTeamName = document.getElementById('loggedTeamName');
+    const loggedParticipantName = document.getElementById('loggedParticipantName');
     
     if (loginSection) loginSection.style.display = 'none';
     if (puzzleSection) puzzleSection.style.display = 'block';
-    if (loggedTeamName) loggedTeamName.textContent = teamName;
+    if (loggedParticipantName) loggedParticipantName.textContent = participantName;
 }
 
 function handleLogout() {
     // Clear stored credentials
-    localStorage.removeItem('teamCode');
-    localStorage.removeItem('teamName');
+    localStorage.removeItem('participantCode');
+    localStorage.removeItem('participantEmail');
+    localStorage.removeItem('participantName');
     
     // Reload page
     window.location.reload();

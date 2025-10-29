@@ -617,10 +617,28 @@ a {
     position: relative;
 }
 
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
 .form-group label {
     font-size: 0.9rem;
     color: var(--text-main);
     font-weight: 600;
+}
+
+.input-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: -0.25rem;
 }
 
 .form-group input,
@@ -634,6 +652,10 @@ a {
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
     transition: all 0.3s ease;
+}
+
+.form-group select {
+    cursor: pointer;
 }
 
 .form-group input:focus,
@@ -756,6 +778,33 @@ a {
     background: rgba(0, 255, 255, 0.1);
     border: 1px solid var(--accent-cyan);
     border-radius: 4px;
+}
+
+.participant-code-display {
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid var(--accent-cyan);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.code-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.code-note {
+    font-size: 0.85rem;
+    color: var(--accent-purple);
+    margin-top: 1rem;
+}
+
+.welcome-message {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    margin: 1rem 0;
 }
 
 .message-note {

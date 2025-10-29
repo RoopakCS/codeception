@@ -29,9 +29,9 @@
     <main class="content-section">
         <div class="container">
             <div class="page-header">
-                <h1 class="page-title glow-text">Team Registration</h1>
+                <h1 class="page-title glow-text">Participant Registration</h1>
                 <div class="title-underline"></div>
-                <p class="page-subtitle">Assemble your team and enter the competition</p>
+                <p class="page-subtitle">Create your account to participate in Codeception 2025</p>
             </div>
 
             <div class="form-container">
@@ -44,9 +44,13 @@
                     <div id="successMessage" class="message success-message" style="display: none;">
                         <div class="message-icon">✓</div>
                         <h3>Registration Successful!</h3>
-                        <p>Your team has been registered for Codeception 2025.</p>
-                        <p class="team-code">Your Team Code: <span id="teamCode"></span></p>
-                        <p class="message-note">Save this code! You'll need it to access the puzzle.</p>
+                        <p>You have been successfully registered for Codeception 2025.</p>
+                        <div class="participant-code-display">
+                            <p class="code-label">Your Participant Code:</p>
+                            <p class="team-code"><span id="registeredParticipantCode"></span></p>
+                            <p class="code-note">⚠️ <strong>Save this code!</strong> You'll need it along with your email to access the puzzle.</p>
+                        </div>
+                        <p class="welcome-message">Welcome, <span id="registeredName"></span>!</p>
                         <a href="puzzle.html" class="btn btn-primary">
                             <span>Go to Puzzle Access</span>
                             <div class="btn-glow"></div>
@@ -61,72 +65,98 @@
 
                     <form id="registrationForm" class="registration-form">
                         <div class="form-section">
-                            <h3 class="section-title">Team Information</h3>
+                            <h3 class="section-title">Participant Information</h3>
                             
                             <div class="form-group">
-                                <label for="teamName">Team Name *</label>
+                                <label for="name">Full Name *</label>
                                 <input 
                                     type="text" 
-                                    id="teamName" 
-                                    name="teamName" 
+                                    id="name" 
+                                    name="name" 
                                     required 
-                                    placeholder="Enter your team name"
-                                    maxlength="50"
+                                    placeholder="Enter your full name"
+                                    maxlength="100"
                                 >
                                 <span class="input-focus-border"></span>
                             </div>
 
                             <div class="form-group">
-                                <label for="leaderEmail">Team Leader Email *</label>
+                                <label for="registerNumber">Register Number *</label>
+                                <input 
+                                    type="text" 
+                                    id="registerNumber" 
+                                    name="registerNumber" 
+                                    required 
+                                    placeholder="e.g., 21CS001"
+                                    maxlength="20"
+                                    style="text-transform: uppercase;"
+                                >
+                                <span class="input-focus-border"></span>
+                                <small class="input-hint">Your college register number</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email ID *</label>
                                 <input 
                                     type="email" 
-                                    id="leaderEmail" 
-                                    name="leaderEmail" 
+                                    id="email" 
+                                    name="email" 
                                     required 
-                                    placeholder="leader@example.com"
+                                    placeholder="you@example.com"
                                 >
                                 <span class="input-focus-border"></span>
+                                <small class="input-hint">You'll use this to log in</small>
                             </div>
-                        </div>
 
-                        <div class="form-section">
-                            <h3 class="section-title">Team Members (1-3 members total)</h3>
-                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="department">Department *</label>
+                                    <select 
+                                        id="department" 
+                                        name="department" 
+                                        required
+                                    >
+                                        <option value="">Select Department</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Electronics">Electronics & Communication</option>
+                                        <option value="Electrical">Electrical & Electronics</option>
+                                        <option value="Mechanical">Mechanical</option>
+                                        <option value="Civil">Civil</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <span class="input-focus-border"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="year">Year *</label>
+                                    <select 
+                                        id="year" 
+                                        name="year" 
+                                        required
+                                    >
+                                        <option value="">Select Year</option>
+                                        <option value="1">1st Year</option>
+                                        <option value="2">2nd Year</option>
+                                        <option value="3">3rd Year</option>
+                                        <option value="4">4th Year</option>
+                                    </select>
+                                    <span class="input-focus-border"></span>
+                                </div>
+                            </div>
+
                             <div class="form-group">
-                                <label for="member1">Member 1 Name *</label>
+                                <label for="password">Password *</label>
                                 <input 
-                                    type="text" 
-                                    id="member1" 
-                                    name="member1" 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
                                     required 
-                                    placeholder="Full name"
-                                    maxlength="50"
+                                    placeholder="Choose a strong password"
+                                    minlength="6"
                                 >
                                 <span class="input-focus-border"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="member2">Member 2 Name</label>
-                                <input 
-                                    type="text" 
-                                    id="member2" 
-                                    name="member2" 
-                                    placeholder="Full name (optional)"
-                                    maxlength="50"
-                                >
-                                <span class="input-focus-border"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="member3">Member 3 Name</label>
-                                <input 
-                                    type="text" 
-                                    id="member3" 
-                                    name="member3" 
-                                    placeholder="Full name (optional)"
-                                    maxlength="50"
-                                >
-                                <span class="input-focus-border"></span>
+                                <small class="input-hint">Minimum 6 characters</small>
                             </div>
                         </div>
 
@@ -142,7 +172,7 @@
 
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary btn-large">
-                                <span>Register Team</span>
+                                <span>Register Now</span>
                                 <div class="btn-glow"></div>
                             </button>
                             <button type="reset" class="btn btn-outline">
@@ -156,25 +186,31 @@
 
                 <div class="info-sidebar">
                     <div class="sidebar-card">
-                        <h3>Registration Tips</h3>
+                        <h3>Registration Guide</h3>
                         <ul>
-                            <li>Choose a memorable team name</li>
-                            <li>Use a valid email address</li>
-                            <li>Teams can have 1-3 members</li>
-                            <li>Save your team code after registration</li>
-                            <li>You'll need the code to access puzzles</li>
+                            <li>Use your official college register number</li>
+                            <li>Provide a valid email address</li>
+                            <li>Choose a strong password</li>
+                            <li>Save your participant code after registration</li>
+                            <li>You'll need your email and participant code to log in</li>
                         </ul>
                     </div>
 
                     <div class="sidebar-card">
                         <h3>What Happens Next?</h3>
                         <ol>
-                            <li>Submit your registration</li>
-                            <li>Receive your unique team code</li>
+                            <li>Complete the registration form</li>
+                            <li>Receive your unique participant code</li>
+                            <li>Save your participant code securely</li>
                             <li>Wait for the event to begin</li>
-                            <li>Access puzzles using your code</li>
+                            <li>Log in with email & code to access puzzles</li>
                             <li>Compete and climb the leaderboard!</li>
                         </ol>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>⚠️ Important</h3>
+                        <p>This is an <strong>individual event</strong>. Each participant competes independently. Make sure to save your participant code - you'll need it to access the puzzle portal!</p>
                     </div>
                 </div>
             </div>

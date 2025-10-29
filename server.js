@@ -1,8 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const path = require('path');
+require('dotenv').config();
 
 // Initialize Express app
 const app = express();
@@ -13,40 +15,60 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 // MongoDB Connection
-// Replace with your MongoDB Atlas connection string or local MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/codeception';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-.then(() => console.log('✓ Connected to MongoDB'))
-.catch(err => console.error('✗ MongoDB connection error:', err));
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
+
+// ===== CONSTANTS =====
+const SALT_ROUNDS = 10;
 
 // ===== MONGOOSE SCHEMAS =====
 
-// Team Schema
-const teamSchema = new mongoose.Schema({
-    teamName: {
+// Participant Schema (Individual Registration)
+const participantSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    registerNumber: {
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+        uppercase: true
     },
-    leaderEmail: {
+    email: {
         type: String,
         required: true,
+        unique: true,
         trim: true,
         lowercase: true
     },
-    members: [{
-        type: String,
-        trim: true
-    }],
-    teamCode: {
+    department: {
         type: String,
         required: true,
-        unique: true
+        trim: true
+    },
+    year: {
+        type: String,
+        required: true,
+        enum: ['1', '2', '3', '4']
+    },
+    participantCode: {
+        type: String,
+        required: true,
+        unique: true,
+        uppercase: true
+    },
+    passwordHash: {
+        type: String,
+        required: true
     },
     registrationDate: {
         type: Date,
@@ -58,25 +80,28 @@ const teamSchema = new mongoose.Schema({
     }
 });
 
-// Score Schema
+// Score Schema (Participant-based)
 const scoreSchema = new mongoose.Schema({
-    teamName: {
-        type: String,
+    participantId: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Team'
+        ref: 'Participant'
     },
-    teamCode: {
+    name: {
+        type: String,
+        required: true
+    },
+    registerNumber: {
         type: String,
         required: true
     },
     score: {
         type: Number,
-        default: 0,
-        min: 0
+        default: 0
     },
     timeTaken: {
-        type: Number, // in minutes
-        default: null
+        type: Number,
+        default: 0
     },
     status: {
         type: String,
@@ -95,18 +120,18 @@ const scoreSchema = new mongoose.Schema({
 });
 
 // Create indexes for better query performance
-teamSchema.index({ teamName: 1, teamCode: 1 });
+participantSchema.index({ registerNumber: 1, email: 1, participantCode: 1 });
 scoreSchema.index({ score: -1, timeTaken: 1 });
 
 // Create Models
-const Team = mongoose.model('Team', teamSchema);
+const Participant = mongoose.model('Participant', participantSchema);
 const Score = mongoose.model('Score', scoreSchema);
 
 // ===== UTILITY FUNCTIONS =====
 
-// Generate unique team code
-function generateTeamCode() {
-    return crypto.randomBytes(4).toString('hex').toUpperCase();
+// Generate unique participant code
+function generateParticipantCode() {
+    return 'PC' + crypto.randomBytes(3).toString('hex').toUpperCase();
 }
 
 // Validate email format
@@ -126,118 +151,132 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Register a new team
+// Register a new participant (Individual Registration)
 app.post('/api/register', async (req, res) => {
     try {
-        const { teamName, leaderEmail, members } = req.body;
+        const { name, registerNumber, email, department, year, password } = req.body;
         
         // Validation
-        if (!teamName || !leaderEmail || !members || members.length === 0) {
+        if (!name || !registerNumber || !email || !department || !year || !password) {
             return res.status(400).json({ 
                 success: false,
-                message: 'Team name, leader email, and at least one member are required' 
+                message: 'All fields are required (Name, Register Number, Email, Department, Year, Password)'
             });
         }
         
-        if (!isValidEmail(leaderEmail)) {
+        if (!isValidEmail(email)) {
             return res.status(400).json({ 
                 success: false,
-                message: 'Invalid email format' 
+                message: 'Invalid email format'
             });
         }
         
-        if (members.length > 3) {
+        if (!['1', '2', '3', '4'].includes(year)) {
             return res.status(400).json({ 
                 success: false,
-                message: 'Maximum 3 members allowed per team' 
+                message: 'Year must be 1, 2, 3, or 4'
             });
         }
         
-        // Check if team name already exists
-        const existingTeam = await Team.findOne({ teamName: { $regex: new RegExp(`^${teamName}$`, 'i') } });
-        if (existingTeam) {
-            return res.status(409).json({ 
+        // Check if participant already exists
+        const existingParticipant = await Participant.findOne({ 
+            $or: [
+                { registerNumber: registerNumber.toUpperCase() },
+                { email: email.toLowerCase() }
+            ]
+        });
+        
+        if (existingParticipant) {
+            return res.status(409).json({
                 success: false,
-                message: 'Team name already exists. Please choose a different name.' 
+                message: 'A participant with this register number or email already exists'
             });
         }
         
-        // Generate unique team code
-        let teamCode;
+        // Generate unique participant code
+        let participantCode;
         let codeExists = true;
+        
         while (codeExists) {
-            teamCode = generateTeamCode();
-            const existingCode = await Team.findOne({ teamCode });
-            if (!existingCode) {
+            participantCode = generateParticipantCode();
+            const existing = await Participant.findOne({ participantCode });
+            if (!existing) {
                 codeExists = false;
             }
         }
         
-        // Create new team
-        const newTeam = new Team({
-            teamName,
-            leaderEmail,
-            members: members.filter(m => m.trim() !== ''),
-            teamCode
+        // Hash password
+        const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+        
+        // Create new participant
+        const newParticipant = new Participant({
+            name: name.trim(),
+            registerNumber: registerNumber.toUpperCase(),
+            email: email.toLowerCase(),
+            department: department.trim(),
+            year: year,
+            participantCode,
+            passwordHash
         });
         
-        await newTeam.save();
+        await newParticipant.save();
         
-        // Create initial score entry
+        // Create initial score entry for the participant
         const newScore = new Score({
-            teamName,
-            teamCode,
+            participantId: newParticipant._id,
+            name: newParticipant.name,
+            registerNumber: newParticipant.registerNumber,
             score: 0,
+            timeTaken: 0,
             status: 'pending'
         });
-        
         await newScore.save();
         
-        res.status(201).json({ 
+        res.status(201).json({
             success: true,
-            message: 'Team registered successfully',
-            teamCode,
-            teamName
+            message: 'Registration successful',
+            participantCode: participantCode,
+            name: newParticipant.name
         });
         
     } catch (error) {
         console.error('Registration error:', error);
         res.status(500).json({ 
             success: false,
-            message: 'Server error. Please try again later.' 
+            message: 'Server error during registration. Please try again later.'
         });
     }
 });
-
-// Verify team credentials
+// Verify participant credentials (Login with Email and Participant Code)
 app.post('/api/verify-team', async (req, res) => {
     try {
-        const { teamName, teamCode } = req.body;
+        const { email, participantCode } = req.body;
         
-        if (!teamName || !teamCode) {
+        if (!email || !participantCode) {
             return res.status(400).json({ 
                 valid: false,
-                message: 'Team name and code are required' 
+                message: 'Email and participant code are required' 
             });
         }
         
-        // Find team with matching name and code
-        const team = await Team.findOne({ 
-            teamName: { $regex: new RegExp(`^${teamName}$`, 'i') },
-            teamCode: teamCode.toUpperCase(),
+        // Find participant with matching email and code
+        const participant = await Participant.findOne({ 
+            email: email.toLowerCase(),
+            participantCode: participantCode.toUpperCase(),
             active: true
         });
         
-        if (team) {
+        if (participant) {
             res.json({ 
                 valid: true,
                 message: 'Authentication successful',
-                teamName: team.teamName
+                name: participant.name,
+                participantCode: participant.participantCode
             });
         } else {
             res.status(401).json({ 
                 valid: false,
-                message: 'Invalid team name or code' 
+                message: 'Invalid email or participant code' 
             });
         }
         
@@ -256,7 +295,7 @@ app.get('/api/leaderboard', async (req, res) => {
         // Fetch all scores, sorted by score (descending) and time taken (ascending)
         const scores = await Score.find()
             .sort({ score: -1, timeTaken: 1 })
-            .select('teamName score timeTaken status')
+            .select('name registerNumber score timeTaken status')
             .lean();
         
         res.json({ 
@@ -275,32 +314,29 @@ app.get('/api/leaderboard', async (req, res) => {
     }
 });
 
-// Update team score (Admin only - in production, add authentication)
-app.put('/api/score/:teamCode', async (req, res) => {
+// Update participant score (Admin only - in production, add authentication)
+app.put('/api/score/:registerNumber', async (req, res) => {
     try {
-        const { teamCode } = req.params;
+        const { registerNumber } = req.params;
         const { score, timeTaken, status, puzzleId, points } = req.body;
         
-        // Find team
-        const team = await Team.findOne({ teamCode: teamCode.toUpperCase() });
-        if (!team) {
+        // Find participant
+        const participant = await Participant.findOne({ registerNumber: registerNumber.toUpperCase() });
+        if (!participant) {
             return res.status(404).json({ 
                 success: false,
-                message: 'Team not found' 
+                message: 'Participant not found' 
             });
         }
         
-        // Update score
-        const updateData = {
-            lastUpdated: Date.now()
-        };
-        
+        // Build update object
+        const updateData = { lastUpdated: new Date() };
         if (score !== undefined) updateData.score = score;
         if (timeTaken !== undefined) updateData.timeTaken = timeTaken;
         if (status !== undefined) updateData.status = status;
         
         const scoreDoc = await Score.findOneAndUpdate(
-            { teamCode: teamCode.toUpperCase() },
+            { registerNumber: registerNumber.toUpperCase() },
             updateData,
             { new: true }
         );
@@ -308,7 +344,7 @@ app.put('/api/score/:teamCode', async (req, res) => {
         // Add puzzle solved entry if provided
         if (puzzleId && points !== undefined) {
             await Score.updateOne(
-                { teamCode: teamCode.toUpperCase() },
+                { registerNumber: registerNumber.toUpperCase() },
                 { 
                     $push: { 
                         puzzlesSolved: {
@@ -337,87 +373,87 @@ app.put('/api/score/:teamCode', async (req, res) => {
     }
 });
 
-// Get team details by team code
-app.get('/api/team/:teamCode', async (req, res) => {
+// Get participant details by register number
+app.get('/api/participant/:registerNumber', async (req, res) => {
     try {
-        const { teamCode } = req.params;
+        const { registerNumber } = req.params;
         
-        const team = await Team.findOne({ teamCode: teamCode.toUpperCase() })
-            .select('-__v');
+        const participant = await Participant.findOne({ registerNumber: registerNumber.toUpperCase() })
+            .select('-__v -passwordHash');
         
-        if (!team) {
+        if (!participant) {
             return res.status(404).json({ 
                 success: false,
-                message: 'Team not found' 
+                message: 'Participant not found' 
             });
         }
         
-        const score = await Score.findOne({ teamCode: teamCode.toUpperCase() })
+        const score = await Score.findOne({ registerNumber: registerNumber.toUpperCase() })
             .select('-__v');
         
         res.json({ 
             success: true,
-            team,
+            participant,
             score
         });
         
     } catch (error) {
-        console.error('Team fetch error:', error);
+        console.error('Participant fetch error:', error);
         res.status(500).json({ 
             success: false,
-            message: 'Failed to fetch team details' 
+            message: 'Failed to fetch participant details' 
         });
     }
 });
 
-// Get all teams (Admin only - in production, add authentication)
-app.get('/api/teams', async (req, res) => {
+// Get all participants (Admin only - in production, add authentication)
+app.get('/api/participants', async (req, res) => {
     try {
-        const teams = await Team.find()
+        const participants = await Participant.find()
             .sort({ registrationDate: -1 })
-            .select('-__v');
+            .select('-__v -passwordHash');
         
         res.json({ 
             success: true,
-            teams,
-            count: teams.length
+            participants,
+            count: participants.length
         });
         
     } catch (error) {
-        console.error('Teams fetch error:', error);
+        console.error('Participants fetch error:', error);
         res.status(500).json({ 
             success: false,
-            message: 'Failed to fetch teams' 
+            message: 'Failed to fetch participants' 
         });
     }
 });
 
-// Delete team (Admin only - in production, add authentication)
-app.delete('/api/team/:teamCode', async (req, res) => {
+// Delete participant (Admin only - in production, add authentication)
+app.delete('/api/participant/:registerNumber', async (req, res) => {
     try {
-        const { teamCode } = req.params;
+        const { registerNumber } = req.params;
         
-        const team = await Team.findOneAndDelete({ teamCode: teamCode.toUpperCase() });
-        if (!team) {
+        const participant = await Participant.findOneAndDelete({ registerNumber: registerNumber.toUpperCase() });
+        if (!participant) {
             return res.status(404).json({ 
                 success: false,
-                message: 'Team not found' 
+                message: 'Participant not found' 
             });
         }
         
         // Also delete associated score
-        await Score.findOneAndDelete({ teamCode: teamCode.toUpperCase() });
+        await Score.findOneAndDelete({ registerNumber: registerNumber.toUpperCase() });
         
         res.json({ 
             success: true,
-            message: 'Team deleted successfully'
+            message: 'Participant deleted successfully'
         });
         
     } catch (error) {
-        console.error('Team deletion error:', error);
+        console.error('Participant deletion error:', error);
         res.status(500).json({ 
             success: false,
-            message: 'Failed to delete team' 
+            message: 'Failed to delete participant' 
         });
     }
 });
@@ -463,18 +499,7 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`
-╔════════════════════════════════════════════╗
-║   CODECEPTION 2025 - Server Running       ║
-╠════════════════════════════════════════════╣
-║   Port: ${PORT}                              ║
-║   Environment: ${process.env.NODE_ENV || 'development'}                  ║
-║   MongoDB: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'}                      ║
-╠════════════════════════════════════════════╣
-║   Access the website at:                   ║
-║   http://localhost:${PORT}                    ║
-╚════════════════════════════════════════════╝
-    `);
+    console.log("Server Started");
 });
 
 // Graceful shutdown
