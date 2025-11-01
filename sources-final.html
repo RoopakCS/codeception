@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sources Master | Codeception 2025</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+        <script src="/static/sourceChallenge.js"></script>
+    </head>
+    <body>
+        <div class="animated-bg"></div>
+
+        <main class="challenge-section">
+            <div class="container">
+                <div class="challenge-card">
+                    <div class="scanning-line"></div>
+
+                    <div class="challenge-header">
+                        <div class="terminal-icon glitch">
+                            <span class="code-bracket">&lt;</span>
+                            <span>/</span>
+                            <span class="code-bracket">&gt;</span>
+                        </div>
+                        <h1 class="challenge-title glow-text">
+                            STAGE 10: SOURCES & DEBUGGER
+                        </h1>
+                    </div>
+
+                    <div class="challenge-content">
+                        <p class="instruction-text">
+                            The final challenge requires debugging skills...
+                        </p>
+                        <p class="hint-text">
+                            💡 Sources tab → sourceChallenge.js → Set
+                            breakpoints
+                        </p>
+
+                        <div class="glitch-text" data-text="D3BUGG3R T1M3">
+                            D3BUGG3R T1M3
+                        </div>
+
+                        <div class="code-display">
+                            <pre>
+Instructions:
+1. Open Sources tab
+2. Find sourceChallenge.js
+3. Look for the hidden variable
+4. Set a breakpoint at line with 'secretCode'
+5. Call window.startDebugChallenge()</pre
+                            >
+                        </div>
+
+                        <button
+                            onclick="window.startDebugChallenge()"
+                            class="btn btn-secondary"
+                        >
+                            <span>🐛 Start Debug Challenge</span>
+                        </button>
+
+                        <div id="debugHint" style="margin-top: 20px"></div>
+                    </div>
+
+                    <div class="decode-input-section" style="margin-top: 30px">
+                        <label for="debugAnswer"
+                            >What's the secretCode value?</label
+                        >
+                        <input
+                            type="text"
+                            id="debugAnswer"
+                            placeholder="Use debugger to find it"
+                        />
+                        <button
+                            onclick="checkDebug()"
+                            class="btn btn-primary btn-large"
+                        >
+                            <span>Submit Final Answer</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <div id="debugResult"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="script.js"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                awardPoints(10, 'stage10_sources');
+
+                console.log(
+                    '%c🐛 FINAL STAGE: Sources & Debugger',
+                    'background: #9D4EDD; color: white; padding: 10px; font-size: 18px; font-weight: bold;'
+                );
+                console.log('Open Sources tab and find sourceChallenge.js');
+                console.log(
+                    'Look for the secretCode variable inside the debugger'
+                );
+            });
+
+            function checkDebug() {
+                const input = document
+                    .getElementById('debugAnswer')
+                    .value.trim();
+                const result = document.getElementById('debugResult');
+
+                // Answer: CODECEPTION_MASTER_2025 (from sourceChallenge.js)
+                if (input === 'CODECEPTION_MASTER_2025') {
+                    result.innerHTML =
+                        '<div class="success-msg">🎉 PERFECT! You\'ve mastered DevTools! Redirecting to completion...</div>';
+                    result.className = 'result-message success';
+
+                    awardPoints(10, 'stage10_debugger_found');
+
+                    setTimeout(() => {
+                        window.location.href = '/final-access.html';
+                    }, 3000);
+                } else {
+                    result.innerHTML =
+                        '<div class="error-msg">✗ Use Sources tab and set a breakpoint to find the secretCode</div>';
+                    result.className = 'result-message error';
+                }
+            }
+
+            async function awardPoints(points, stage) {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+
+                if (!participantCode || !participantEmail) return;
+
+                try {
+                    await fetch('/api/award-points', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points,
+                            stage,
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error awarding points:', error);
+                }
+            }
+        </script>
+    </body>
+</html>

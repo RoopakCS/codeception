@@ -10,7 +10,6 @@
     --error: #ff3b5c;
     --card-bg: rgba(255, 255, 255, 0.03);
     --card-border: rgba(0, 255, 255, 0.2);
-    --nav-visibility: block;
 }
 
 /* ===== RESET & BASE STYLES ===== */
@@ -121,7 +120,7 @@ a {
 
 .logo {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.5rem;
     font-family: 'Orbitron', sans-serif;
 }
@@ -140,9 +139,6 @@ a {
     display: flex;
     list-style: none;
     gap: 2rem;
-    align-items: center;
-    margin: 0;
-    padding: 0;
 }
 
 .nav-menu a {
@@ -151,7 +147,6 @@ a {
     transition: all 0.3s ease;
     position: relative;
     padding: 0.5rem 0;
-    text-decoration: none;
 }
 
 .nav-menu a::after {
@@ -177,44 +172,6 @@ a {
 .nav-menu a:hover,
 .nav-menu a.active {
     color: var(--accent-cyan);
-}
-
-.nav-menu li a[href='register.html'],
-.nav-menu li a[href='login.html'] {
-    display: var(--nav-visibility);
-}
-
-/* User Avatar */
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(
-        135deg,
-        var(--accent-cyan),
-        var(--accent-purple)
-    );
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bg-primary);
-    font-weight: 600;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    border: 2px solid transparent;
-}
-
-.user-avatar:hover {
-    transform: scale(1.05);
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-}
-
-/* Hide register CTA when logged in */
-.auth-hide {
-    display: var(--nav-visibility);
 }
 
 /* ===== CONTAINER ===== */
@@ -1430,58 +1387,6 @@ a {
     75% {
         opacity: 0.3;
     }
-}
-
-/* ===== PARTICIPANT PROFILE ===== */
-.participant-profile {
-    text-align: center;
-    padding: 2rem;
-}
-
-.participant-profile .user-avatar {
-    margin: 0 auto 1.5rem;
-    width: 100px;
-    height: 100px;
-    font-size: 2.5rem;
-}
-
-.participant-profile h2 {
-    margin-bottom: 0.5rem;
-    font-size: 2rem;
-}
-
-.participant-profile .text-muted {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-}
-
-.status-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
-
-.status-grid .status-item {
-    text-align: center;
-    padding: 1rem;
-    background: rgba(0, 255, 255, 0.05);
-    border-radius: 8px;
-    border: 1px solid var(--card-border);
-}
-
-.status-grid .status-label {
-    display: block;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-}
-
-.status-grid .status-value {
-    display: block;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.8rem;
-    color: var(--accent-cyan);
 }
 
 /* ===== MISSION INSTRUCTIONS ===== */

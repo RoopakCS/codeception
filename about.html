@@ -4,23 +4,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>About | Codeception</title>
-        <link rel="stylesheet" href="./css/style.css" />
+        <link rel="stylesheet" href="style.css" />
         <link
             href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
             rel="stylesheet"
         />
-        <!-- Early auth check to prevent navigation flash -->
-        <script>
-            function hideNavLinks() {
-                if (localStorage.getItem('authToken')) {
-                    document.documentElement.style.setProperty(
-                        '--nav-visibility',
-                        'none'
-                    );
-                }
-            }
-            hideNavLinks();
-        </script>
     </head>
     <body>
         <div class="animated-bg"></div>
@@ -33,9 +21,9 @@
                 <ul class="nav-menu">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html" class="active">About</a></li>
-                    <li><a href="leaderboard.html">Leaderboard</a></li>
                     <li><a href="register.html">Register</a></li>
-                    <li><a href="login.html">Login</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li><a href="puzzle.html">Puzzle Access</a></li>
                 </ul>
             </div>
         </nav>
@@ -179,7 +167,7 @@
                         </div>
                     </div>
 
-                    <div class="info-card full-width cta-card auth-hide">
+                    <div class="info-card full-width cta-card">
                         <h3>Ready to Begin Your Journey?</h3>
                         <p>
                             Register now and prepare to decode the digital maze.
@@ -200,6 +188,6 @@
             </p>
         </footer>
 
-        <script src="/js/script.js"></script>
+        <script src="script.js"></script>
     </body>
 </html>

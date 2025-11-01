@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>My Profile | Codeception</title>
+        <link rel="stylesheet" href="./css/style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+        <!-- Early auth check to prevent navigation flash -->
+        <script>
+            function hideNavLinks() {
+                if (localStorage.getItem('authToken')) {
+                    document.documentElement.style.setProperty(
+                        '--nav-visibility',
+                        'none'
+                    );
+                }
+            }
+            hideNavLinks();
+
+            // Redirect if not logged in
+            if (!localStorage.getItem('authToken')) {
+                window.location.href = 'login.html';
+            }
+        </script>
+    </head>
+    <body>
+        <div class="animated-bg"></div>
+
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="glow-text">CODECEPTION</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li><a href="register.html">Register</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content-section">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title glow-text">My Profile</h1>
+                    <div class="title-underline"></div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="info-card full-width">
+                        <div class="participant-profile">
+                            <div class="user-avatar" id="profileAvatar"></div>
+                            <h2 id="profileName" class="highlight"></h2>
+                            <p id="profileEmail" class="text-muted"></p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>Event Status</h3>
+                        <div class="status-grid">
+                            <div class="status-item">
+                                <span class="status-label">Current Score</span>
+                                <span class="status-value" id="currentScore"
+                                    >0</span
+                                >
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Puzzles Solved</span>
+                                <span class="status-value" id="puzzlesSolved"
+                                    >0</span
+                                >
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Time Spent</span>
+                                <span class="status-value" id="timeSpent"
+                                    >0m</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>Account Actions</h3>
+                        <div class="form-actions" style="margin-top: 1rem">
+                            <button
+                                class="btn btn-outline"
+                                onclick="handleLogout()"
+                            >
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>
+                &copy; 2025 Codeception. All rights reserved. | Powered by Code
+                & Curiosity
+            </p>
+        </footer>
+
+        <script src="/js/script.js"></script>
+        <script>
+            // Load participant data
+            document.addEventListener('DOMContentLoaded', function () {
+                const participantName = localStorage.getItem('participantName');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+
+                if (!participantName || !participantEmail) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Set profile info
+                document.getElementById('profileName').textContent =
+                    participantName;
+                document.getElementById('profileEmail').textContent =
+                    participantEmail;
+
+                // Set avatar initials
+                const initials = participantName
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .substring(0, 2)
+                    .toUpperCase();
+                document.getElementById('profileAvatar').textContent = initials;
+
+                // Load participant stats from server
+                loadParticipantStats();
+            });
+
+            async function loadParticipantStats() {
+                try {
+                    const response = await makeAuthenticatedRequest(
+                        '/api/participant-stats'
+                    );
+                    if (response.ok) {
+                        const stats = await response.json();
+                        document.getElementById('currentScore').textContent =
+                            stats.score || '0';
+                        document.getElementById('puzzlesSolved').textContent =
+                            stats.puzzlesSolved || '0';
+                        document.getElementById('timeSpent').textContent =
+                            formatTime(stats.timeSpent || 0);
+                    }
+                } catch (error) {
+                    console.error('Failed to load participant stats:', error);
+                }
+            }
+        </script>
+    </body>
+</html>

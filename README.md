@@ -51,58 +51,67 @@ codeception/
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/RoopakCS/codeception.git
-   cd codeception
-   ```
+
+    ```bash
+    git clone https://github.com/RoopakCS/codeception.git
+    cd codeception
+    ```
 
 2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+
+    ```bash
+    npm install
+    ```
 
 3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit `.env` and configure your MongoDB connection:
-   ```
-   PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/codeception
-   ```
-   
-   For MongoDB Atlas:
-   ```
-   MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/codeception?retryWrites=true&w=majority
-   ```
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    Edit `.env` and configure your MongoDB connection:
+
+    ```
+    PORT=3000
+    MONGODB_URI=mongodb://localhost:27017/codeception
+    ```
+
+    For MongoDB Atlas:
+
+    ```
+    MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/codeception?retryWrites=true&w=majority
+    ```
 
 4. **Start MongoDB** (if using local MongoDB)
-   ```bash
-   mongod
-   ```
+
+    ```bash
+    mongod
+    ```
 
 5. **Start the server**
-   ```bash
-   npm start
-   ```
-   
-   For development with auto-reload:
-   ```bash
-   npm run dev
-   ```
+
+    ```bash
+    npm start
+    ```
+
+    For development with auto-reload:
+
+    ```bash
+    npm run dev
+    ```
 
 6. **Access the website**
    Open your browser and navigate to:
-   ```
-   http://localhost:3000
-   ```
+    ```
+    http://localhost:3000
+    ```
 
 ## 📊 MongoDB Collections
 
 The application uses two main collections:
 
 ### `teams` Collection
+
 ```javascript
 {
   teamName: String,
@@ -115,6 +124,7 @@ The application uses two main collections:
 ```
 
 ### `scores` Collection
+
 ```javascript
 {
   teamName: String,
@@ -153,9 +163,9 @@ The application uses two main collections:
 
 1. Navigate to the **Register** page
 2. Fill in the team information:
-   - Team name
-   - Team leader email
-   - Member names (1-3 members)
+    - Team name
+    - Team leader email
+    - Member names (1-3 members)
 3. Accept the terms and conditions
 4. Submit the form
 5. Save the generated team code
@@ -179,6 +189,7 @@ The application uses two main collections:
 ### Changing Event Date
 
 Edit the date in `script.js`:
+
 ```javascript
 const eventDate = new Date('2025-03-15T10:00:00');
 ```
@@ -186,10 +197,11 @@ const eventDate = new Date('2025-03-15T10:00:00');
 ### Updating Styles
 
 All styles are in `./css/style.css`. CSS variables are defined at the top:
+
 ```css
 :root {
-    --bg-primary: #0A0F1C;
-    --accent-cyan: #00FFFF;
+    --bg-primary: #0a0f1c;
+    --accent-cyan: #00ffff;
     /* ... */
 }
 ```

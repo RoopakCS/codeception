@@ -3,80 +3,154 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Login | Codeception 2025</title>
+        <title>Login | Codeception</title>
         <link rel="stylesheet" href="./css/style.css" />
         <link
             href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
             rel="stylesheet"
         />
+        <!-- Early auth check to prevent navigation flash -->
+        <script>
+            function hideNavLinks() {
+                if (localStorage.getItem('authToken')) {
+                    document.documentElement.style.setProperty(
+                        '--nav-visibility',
+                        'none'
+                    );
+                }
+            }
+            hideNavLinks();
+        </script>
     </head>
     <body>
         <div class="animated-bg"></div>
 
-        <main class="login-section">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="glow-text">CODECEPTION</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li><a href="register.html">Register</a></li>
+                    <li><a href="login.html" class="active">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content-section">
             <div class="container">
-                <div class="login-card">
-                    <div class="scanning-line"></div>
+                <div class="page-header">
+                    <h1 class="page-title glow-text">Login</h1>
+                    <div class="title-underline"></div>
+                    <p class="page-subtitle">
+                        Welcome back to Codeception 2025
+                    </p>
+                </div>
 
-                    <div class="login-header">
-                        <div class="terminal-icon">
-                            <span class="code-bracket">&lt;</span>
-                            <span>/</span>
-                            <span class="code-bracket">&gt;</span>
-                        </div>
-                        <h1 class="login-title glow-text">LOGIN</h1>
-                    </div>
-
-                    <form id="loginForm" class="login-form">
-                        <div class="form-group">
-                            <label for="loginEmail">Email</label>
-                            <input
-                                type="email"
-                                id="loginEmail"
-                                name="email"
-                                placeholder="Enter your email"
-                                required
-                            />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="loginPassword">Password</label>
-                            <input
-                                type="password"
-                                id="loginPassword"
-                                name="password"
-                                placeholder="Enter your password"
-                                required
-                            />
-                        </div>
-
-                        <button type="submit" class="btn btn-primary btn-large">
-                            <span>Login</span>
-                            <div class="btn-glow"></div>
-                        </button>
-
-                        <div
-                            id="loginError"
-                            class="error-msg"
-                            style="display: none"
-                        ></div>
+                <div class="form-container">
+                    <div class="form-card">
                         <div
                             id="loadingSpinner"
                             class="loading-spinner"
                             style="display: none"
                         >
                             <div class="spinner"></div>
+                            <p>Logging in...</p>
                         </div>
 
-                        <p class="register-link">
-                            Don't have an account?
-                            <a href="/register.html">Register here</a>
-                        </p>
-                    </form>
+                        <div
+                            id="errorMessage"
+                            class="message error-message"
+                            style="display: none"
+                        >
+                            <div class="message-icon">✕</div>
+                            <h3>Login Failed</h3>
+                            <p id="errorText"></p>
+                        </div>
+
+                        <form id="loginForm" class="login-form">
+                            <div class="form-section">
+                                <div class="form-group">
+                                    <label for="loginEmail">Email *</label>
+                                    <input
+                                        type="email"
+                                        id="loginEmail"
+                                        name="email"
+                                        required
+                                        placeholder="Enter your email"
+                                    />
+                                    <span class="input-focus-border"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="loginPassword"
+                                        >Password *</label
+                                    >
+                                    <input
+                                        type="password"
+                                        id="loginPassword"
+                                        name="password"
+                                        required
+                                        placeholder="Enter your password"
+                                    />
+                                    <span class="input-focus-border"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-large"
+                                >
+                                    <span>Login</span>
+                                    <div class="btn-glow"></div>
+                                </button>
+                            </div>
+
+                            <p class="form-note">* Required fields</p>
+
+                            <div class="form-footer">
+                                <p class="register-link">
+                                    Don't have an account yet?
+                                    <a href="register.html">Register here</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="info-sidebar">
+                        <div class="sidebar-card">
+                            <h3>Login Guide</h3>
+                            <ul>
+                                <li>Use your registered email address</li>
+                                <li>Case-sensitive password</li>
+                                <li>Make sure Caps Lock is off</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Need Help?</h3>
+                            <p>
+                                Forgot your password or having trouble logging
+                                in? Contact the Tech Society team for
+                                assistance.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
 
-        <script src="script.js"></script>
+        <footer class="footer">
+            <p>
+                &copy; 2025 Codeception. All rights reserved. | Powered by Code
+                & Curiosity
+            </p>
+        </footer>
+
+        <script src="/js/script.js"></script>
     </body>
 </html>

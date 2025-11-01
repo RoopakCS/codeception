@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Performance Master | Codeception</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="animated-bg"></div>
+
+        <main class="challenge-section">
+            <div class="container">
+                <div class="challenge-card">
+                    <div class="scanning-line"></div>
+
+                    <div class="challenge-header">
+                        <div class="terminal-icon">
+                            <span class="code-bracket">&lt;</span>
+                            <span>/</span>
+                            <span class="code-bracket">&gt;</span>
+                        </div>
+                        <h1 class="challenge-title glow-text">
+                            STAGE 8: PERFORMANCE TRACKER
+                        </h1>
+                    </div>
+
+                    <div class="challenge-content">
+                        <p class="instruction-text">
+                            Watch the performance carefully...
+                        </p>
+                        <p class="hint-text">
+                            💡 Performance tab → Record → Look for custom events
+                        </p>
+
+                        <button
+                            onclick="triggerPerformance()"
+                            class="btn btn-secondary"
+                        >
+                            <span>⚡ Start Performance Test</span>
+                        </button>
+
+                        <div
+                            id="performanceHint"
+                            style="margin-top: 20px"
+                        ></div>
+                        <div
+                            id="timerDisplay"
+                            style="
+                                margin-top: 20px;
+                                font-size: 24px;
+                                color: #00ffff;
+                            "
+                        ></div>
+                    </div>
+
+                    <div class="decode-input-section" style="margin-top: 30px">
+                        <label for="perfAnswer"
+                            >What's the secret mark name?</label
+                        >
+                        <input
+                            type="text"
+                            id="perfAnswer"
+                            placeholder="Check Performance timeline"
+                        />
+                        <button
+                            onclick="checkPerformance()"
+                            class="btn btn-primary"
+                        >
+                            <span>Submit Answer</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <div id="perfResult"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="script.js"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                awardPoints(10, 'stage8_performance');
+            });
+
+            function triggerPerformance() {
+                document.getElementById('performanceHint').innerHTML =
+                    `<div class="info-msg">⏱️ Performance test running... Check Performance tab!</div>`;
+
+                // Create performance marks
+                performance.mark('challenge_start');
+
+                let count = 5;
+                const timer = setInterval(() => {
+                    document.getElementById('timerDisplay').textContent =
+                        count + 's';
+                    count--;
+
+                    if (count === 2) {
+                        // Secret mark at 3 seconds
+                        performance.mark('SECRET_NEXT_STAGE_console_wizardry');
+                    }
+
+                    if (count < 0) {
+                        clearInterval(timer);
+                        performance.mark('challenge_end');
+                        performance.measure(
+                            'total_challenge_time',
+                            'challenge_start',
+                            'challenge_end'
+                        );
+
+                        document.getElementById('timerDisplay').textContent =
+                            'Complete!';
+                        document.getElementById('performanceHint').innerHTML =
+                            `<div class="success-msg">✓ Test complete! Now check Performance → User Timing</div>`;
+
+                        console.log(
+                            '%c⚡ Performance marks created! Check the Performance tab timeline',
+                            'color: #9D4EDD; font-size: 14px;'
+                        );
+                    }
+                }, 1000);
+            }
+
+            function checkPerformance() {
+                const input = document
+                    .getElementById('perfAnswer')
+                    .value.trim();
+                const result = document.getElementById('perfResult');
+
+                // Answer: SECRET_NEXT_STAGE_console_wizardry or console_wizardry
+                if (
+                    input === 'SECRET_NEXT_STAGE_console_wizardry' ||
+                    input === 'console_wizardry'
+                ) {
+                    result.innerHTML =
+                        '<div class="success-msg">✓ Amazing! Head to /console-wizardry for the next challenge</div>';
+                    result.className = 'result-message success';
+
+                    awardPoints(10, 'stage8_perf_found');
+
+                    setTimeout(() => {
+                        window.location.href = '/console-wizardry';
+                    }, 2500);
+                } else {
+                    result.innerHTML =
+                        '<div class="error-msg">✗ Look for custom marks in Performance → User Timing</div>';
+                    result.className = 'result-message error';
+                }
+            }
+
+            async function awardPoints(points, stage) {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+
+                if (!participantCode || !participantEmail) return;
+
+                try {
+                    await fetch('/api/award-points', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points,
+                            stage,
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error awarding points:', error);
+                }
+            }
+        </script>
+    </body>
+</html>

@@ -1,66 +1,7 @@
 // ===== NAVIGATION MENU MOBILE TOGGLE =====
-// Function to update navigation based on auth status
-function updateNavigation() {
-    const navMenu = document.querySelector('.nav-menu');
-    if (!navMenu) return;
-
-    const authToken = localStorage.getItem('authToken');
-    const participantName = localStorage.getItem('participantName');
-
-    // Update CSS variable for nav visibility
-    document.documentElement.style.setProperty(
-        '--nav-visibility',
-        authToken && participantName ? 'none' : 'block'
-    );
-
-    // Find the register and login links
-    const registerLink = navMenu.querySelector(
-        'a[href="register.html"]'
-    )?.parentElement;
-    const loginLink = navMenu.querySelector(
-        'a[href="login.html"]'
-    )?.parentElement;
-
-    if (authToken && participantName) {
-        // User is logged in
-        if (loginLink) {
-            // Create user initials for avatar
-            const initials = participantName
-                .split(' ')
-                .map((n) => n[0])
-                .join('')
-                .substring(0, 2)
-                .toUpperCase();
-
-            loginLink.innerHTML = `<a href="participant.html" class="user-avatar" title="View Profile">${initials}</a>`;
-            loginLink.style.display = 'block'; // Always show user avatar
-        }
-
-        // Hide register CTAs
-        document
-            .querySelectorAll('a[href="register.html"]:not(.nav-menu *)')
-            .forEach((link) => {
-                link.parentElement.classList.add('auth-hide');
-            });
-    } else {
-        // User is not logged in
-        if (loginLink) loginLink.innerHTML = '<a href="login.html">Login</a>';
-
-        // Show register CTAs
-        document
-            .querySelectorAll('a[href="register.html"]:not(.nav-menu *)')
-            .forEach((link) => {
-                link.parentElement.classList.remove('auth-hide');
-            });
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function () {
     // Add mobile menu functionality if needed
     console.log('Codeception 2025 - Website loaded successfully');
-
-    // Update navigation based on auth status
-    updateNavigation();
 
     // Stage 1 Console Clue
     if (
@@ -417,9 +358,8 @@ async function handleLogin(e) {
             localStorage.setItem('participantEmail', result.participant.email);
             localStorage.setItem('participantName', result.participant.name);
 
-            // Update navigation and redirect to home
-            updateNavigation();
-            window.location.href = '/index.html';
+            // Redirect to puzzle page or reload
+            window.location.href = '/puzzle.html';
         } else {
             if (errorDiv) {
                 errorDiv.textContent =
@@ -521,9 +461,8 @@ function handleLogout() {
     localStorage.removeItem('participantEmail');
     localStorage.removeItem('participantName');
 
-    // Update navigation and redirect to home
-    updateNavigation();
-    window.location.href = '/index.html';
+    // Reload page
+    window.location.reload();
 }
 
 function startCountdown() {
@@ -604,7 +543,7 @@ function initLoginPage() {
         // Verify token
         verifyAuthToken(authToken).then((isValid) => {
             if (isValid) {
-                window.location.href = '/index.html'; // Redirect to puzzle if already logged in
+                window.location.href = '/puzzle.html'; // Redirect to puzzle if already logged in
             }
         });
     }

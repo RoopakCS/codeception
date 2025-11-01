@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || require('crypto').randomBytes(64).toString('hex');
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -8,7 +8,7 @@ const authenticateToken = (req, res, next) => {
     if (!token) {
         return res.status(401).json({
             success: false,
-            message: 'Access denied. No token provided.'
+            message: 'Access denied. No token provided.',
         });
     }
 
@@ -19,12 +19,12 @@ const authenticateToken = (req, res, next) => {
     } catch (error) {
         res.status(403).json({
             success: false,
-            message: 'Invalid token'
+            message: 'Invalid token',
         });
     }
 };
 
 module.exports = {
     authenticateToken,
-    JWT_SECRET
+    JWT_SECRET,
 };

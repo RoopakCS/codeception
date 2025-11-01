@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Decode Me | Codeception 2025</title>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="look_deeper.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="animated-bg"></div>
+
+        <main class="challenge-section">
+            <div class="container">
+                <div class="challenge-card">
+                    <div class="scanning-line"></div>
+
+                    <div class="challenge-header">
+                        <div class="terminal-icon">
+                            <span class="code-bracket">&lt;</span>
+                            <span>/</span>
+                            <span class="code-bracket">&gt;</span>
+                        </div>
+                        <h1 class="challenge-title glow-text">
+                            STAGE 2: DECODE
+                        </h1>
+                    </div>
+
+                    <div class="encrypted-message">
+                        <div class="message-label">ENCRYPTED MESSAGE:</div>
+                        <div class="encrypted-text" id="encryptedText">
+                            U29tZXRpbWVzIHRoZSBvYnZpb3VzIGlzIGhpZGRlbiBpbiBwbGFpbiBzaWdodA==
+                        </div>
+                        <p class="hint-text">
+                            💡 Base64 decoding might help...
+                        </p>
+                    </div>
+
+                    <div class="decode-input-section">
+                        <label for="decodeInput">Enter Decoded Message:</label>
+                        <input
+                            type="text"
+                            id="decodeInput"
+                            placeholder="What does it say?"
+                        />
+                        <button onclick="checkDecode()" class="btn btn-primary">
+                            <span>Submit Answer</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <div id="decodeResult"></div>
+                    </div>
+
+                    <div class="hint-next" style="display: none">
+                        <!-- CSS hint will be found here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="script.js"></script>
+        <script>
+            function checkDecode() {
+                const input = document
+                    .getElementById('decodeInput')
+                    .value.trim()
+                    .toLowerCase();
+                const result = document.getElementById('decodeResult');
+
+                if (
+                    input ===
+                        'sometimes the obvious is hidden in plain sight' ||
+                    input === 'sometimes the obvious is hidden in plain sight.'
+                ) {
+                    result.innerHTML =
+                        '<div class="success-msg">✓ Correct! +10 points. Now inspect the CSS...</div>';
+                    result.className = 'result-message success';
+
+                    // Award points
+                    awardPoints(10, 'stage2_decode');
+
+                    setTimeout(() => {
+                        console.log(
+                            '%c🎯 Excellent! Check the CSS carefully. Look for .hint-next',
+                            'color: #00FF9C; font-size: 14px;'
+                        );
+                    }, 2000);
+                } else {
+                    result.innerHTML =
+                        '<div class="error-msg">✗ Incorrect. Try decoding the message above.</div>';
+                    result.className = 'result-message error';
+                }
+            }
+
+            async function awardPoints(points, stage) {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+
+                if (!participantCode || !participantEmail) {
+                    console.log('Please log in to earn points');
+                    return;
+                }
+
+                try {
+                    await fetch('/api/award-points', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points,
+                            stage,
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error awarding points:', error);
+                }
+            }
+        </script>
+    </body>
+</html>

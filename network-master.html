@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Network Master | Codeception 2025</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wfamily=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="animated-bg"></div>
+
+        <main class="challenge-section">
+            <div class="container">
+                <div class="challenge-card">
+                    <div class="scanning-line"></div>
+
+                    <div class="challenge-header">
+                        <div class="terminal-icon">
+                            <span class="code-bracket">&lt;</span>
+                            <span>/</span>
+                            <span class="code-bracket">&gt;</span>
+                        </div>
+                        <h1 class="challenge-title glow-text">
+                            STAGE 6: NETWORK DETECTIVE
+                        </h1>
+                    </div>
+
+                    <div class="challenge-content">
+                        <p class="instruction-text">
+                            The Network tab holds secrets...
+                        </p>
+                        <p class="hint-text">
+                            💡 Check the response headers of /api/session-data
+                        </p>
+
+                        <button
+                            onclick="triggerNetworkCall()"
+                            class="btn btn-secondary"
+                        >
+                            <span>🔍 Fetch Session Data</span>
+                        </button>
+
+                        <div id="networkHint" style="margin-top: 20px"></div>
+                    </div>
+
+                    <div class="decode-input-section" style="margin-top: 30px">
+                        <label for="headerAnswer"
+                            >What's the value of X-Next-Stage header?</label
+                        >
+                        <input
+                            type="text"
+                            id="headerAnswer"
+                            placeholder="Check Network → Headers"
+                        />
+                        <button onclick="checkHeader()" class="btn btn-primary">
+                            <span>Submit Answer</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <div id="headerResult"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="script.js"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                awardPoints(10, 'stage6_network');
+            });
+
+            async function triggerNetworkCall() {
+                const sessionId = sessionStorage.getItem('challenge_session');
+
+                try {
+                    const response = await fetch('/api/session-data', {
+                        headers: {
+                            'X-Session-ID': sessionId || 'none',
+                        },
+                    });
+
+                    const data = await response.json();
+                    document.getElementById('networkHint').innerHTML =
+                        `<div class="success-msg">✓ Request sent! Check Network tab → Headers → Response Headers</div>`;
+
+                    console.log('Data received:', data);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            function checkHeader() {
+                const input = document
+                    .getElementById('headerAnswer')
+                    .value.trim();
+                const result = document.getElementById('headerResult');
+
+                // Answer: /cookies-matter
+                if (input === '/cookies-matter' || input === 'cookies-matter') {
+                    result.innerHTML =
+                        '<div class="success-msg">✓ Excellent! Navigate to that path...</div>';
+                    result.className = 'result-message success';
+
+                    awardPoints(10, 'stage6_headers');
+
+                    setTimeout(() => {
+                        window.location.href = '/cookies-matter';
+                    }, 2000);
+                } else {
+                    result.innerHTML =
+                        '<div class="error-msg">✗ Check the Response Headers in Network tab!</div>';
+                    result.className = 'result-message error';
+                }
+            }
+
+            async function awardPoints(points, stage) {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+
+                if (!participantCode || !participantEmail) return;
+
+                try {
+                    await fetch('/api/award-points', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points,
+                            stage,
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error awarding points:', error);
+                }
+            }
+        </script>
+    </body>
+</html>
