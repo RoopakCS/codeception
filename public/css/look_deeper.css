@@ -1,0 +1,25 @@
+/* Hidden CSS Clues for Codeception 2025 */
+
+.hint-next::before {
+    content: "/api/getHint?stage=2";
+    display: none;
+    color: #00FFFF;
+    font-family: 'Courier New', monospace;
+}
+
+.hint-next {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Another clue hidden in plain sight */
+.clue {
+    background: url("/hidden/final?key=0x91f");
+    display: none;
+}
+
+/* Stage 3 helper */
+.network-hint {
+    /* Check the Network tab when you visit /api/getHint?stage=2 */
+}

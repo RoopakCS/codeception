@@ -1397,6 +1397,204 @@ a {
     }
 }
 
+/* ===== CHALLENGE PAGES STYLES ===== */
+.challenge-section {
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.challenge-card {
+    max-width: 900px;
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.challenge-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.terminal-icon {
+    font-size: 3rem;
+    color: var(--accent-cyan);
+    margin-bottom: 1rem;
+}
+
+.terminal-icon.glitch {
+    animation: glitch 1s infinite;
+}
+
+@keyframes glitch {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(2px, -2px); }
+    60% { transform: translate(-2px, -2px); }
+    80% { transform: translate(2px, 2px); }
+}
+
+.challenge-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.encrypted-message {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--accent-purple);
+    border-radius: 8px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.message-label {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+.encrypted-text {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    color: var(--accent-cyan);
+    word-break: break-all;
+    padding: 1rem;
+    background: rgba(0, 255, 255, 0.05);
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+
+.hint-text {
+    color: var(--accent-purple);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.decode-input-section,
+.final-input-section {
+    margin-top: 2rem;
+}
+
+.decode-input-section label,
+.final-input-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.decode-input-section input,
+.final-input-section input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 1rem;
+    color: var(--text-main);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.decode-input-section input:focus,
+.final-input-section input:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+.result-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.result-message.success {
+    background: rgba(0, 255, 156, 0.1);
+    border: 1px solid var(--success);
+}
+
+.result-message.error {
+    background: rgba(255, 59, 92, 0.1);
+    border: 1px solid var(--error);
+}
+
+.success-msg {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.error-msg {
+    color: var(--error);
+    font-weight: 600;
+}
+
+.scrambled-section {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.glitch-text {
+    font-size: 2.5rem;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-cyan);
+    position: relative;
+    animation: glitchText 2s infinite;
+}
+
+@keyframes glitchText {
+    0%, 100% { text-shadow: 0 0 10px var(--accent-cyan); }
+    25% { text-shadow: -2px 0 10px var(--accent-cyan), 2px 2px 0 var(--accent-purple); }
+    50% { text-shadow: 2px 0 10px var(--accent-cyan), -2px -2px 0 var(--accent-purple); }
+    75% { text-shadow: -2px 0 10px var(--accent-cyan), 2px -2px 0 var(--accent-purple); }
+}
+
+.scrambled-message {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    font-family: 'Courier New', monospace;
+    color: var(--success);
+    font-size: 0.9rem;
+}
+
+.scrambled-message p {
+    margin: 0.5rem 0;
+}
+
+.riddle-text {
+    color: var(--accent-purple);
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+@media (max-width: 768px) {
+    .challenge-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .challenge-title {
+        font-size: 2rem;
+    }
+    
+    .glitch-text {
+        font-size: 1.8rem;
+    }
+}
+
 @media (max-width: 480px) {
     .container {
         padding: 0 1rem;

@@ -3,15 +3,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add mobile menu functionality if needed
     console.log('Codeception 2025 - Website loaded successfully');
     
+    // Stage 1 Console Clue
+    if (window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname.endsWith('/Codeception/')) {
+        setTimeout(() => {
+            console.log('%c🔍 Good start. Try visiting /decode-me', 'color: #00FFFF; font-size: 16px; font-weight: bold;');
+        }, 2000);
+    }
+    
     // Initialize page-specific functionality
     const currentPage = window.location.pathname.split('/').pop();
     
     if (currentPage === 'register.html' || currentPage === '') {
         initRegistrationForm();
+    } else if (currentPage === 'login.html') {
+        initLoginPage();
     } else if (currentPage === 'leaderboard.html') {
         initLeaderboard();
     } else if (currentPage === 'puzzle.html') {
         initPuzzleAccess();
+    } else if (currentPage === 'decode-me.html') {
+        initDecodeStage();
+    } else if (currentPage === 'the-dark-corner.html') {
+        initDarkCornerStage();
+    } else if (currentPage === 'final-challenge.html') {
+        initFinalChallenge();
     }
 });
 
@@ -252,13 +267,19 @@ function escapeHtml(text) {
 
 // ===== PUZZLE ACCESS =====
 function initPuzzleAccess() {
-    // Check if participant is already logged in
-    const storedCode = localStorage.getItem('participantCode');
-    const storedEmail = localStorage.getItem('participantEmail');
+    // Check if participant is authenticated
+    const authToken = localStorage.getItem('authToken');
     const storedName = localStorage.getItem('participantName');
     
-    if (storedCode && storedEmail && storedName) {
-        showPuzzleSection(storedName);
+    if (authToken && storedName) {
+        // Verify token is still valid
+        verifyAuthToken(authToken).then(isValid => {
+            if (isValid) {
+                showPuzzleSection(storedName);
+            } else {
+                handleLogout(); // Token expired or invalid
+            }
+        });
     }
     
     // Handle login form
@@ -275,6 +296,61 @@ function initPuzzleAccess() {
     
     // Start countdown timer
     startCountdown();
+}
+
+// Handle login form submission
+async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errorDiv = document.getElementById('loginError');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+
+    try {
+        if (loadingSpinner) loadingSpinner.style.display = 'block';
+        
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Store auth token and participant info (never store password)
+            localStorage.setItem('authToken', result.token);
+            localStorage.setItem('participantCode', result.participant.participantCode);
+            localStorage.setItem('participantEmail', result.participant.email);
+            localStorage.setItem('participantName', result.participant.name);
+
+            // Redirect to puzzle page or reload
+            window.location.href = '/puzzle.html';
+        } else {
+            if (errorDiv) {
+                errorDiv.textContent = result.message || 'Login failed. Please try again.';
+                errorDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        if (errorDiv) {
+            errorDiv.textContent = 'Network error. Please try again.';
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+    } finally {
+        if (loadingSpinner) loadingSpinner.style.display = 'none';
+    }
 }
 
 async function handlePuzzleLogin(e) {
@@ -339,6 +415,7 @@ function showPuzzleSection(participantName) {
 
 function handleLogout() {
     // Clear stored credentials
+    localStorage.removeItem('authToken');
     localStorage.removeItem('participantCode');
     localStorage.removeItem('participantEmail');
     localStorage.removeItem('participantName');
@@ -406,6 +483,72 @@ document.addEventListener('click', function(e) {
         }, 100);
     }
 });
+
+// ===== LOGIN PAGE =====
+function initLoginPage() {
+    const form = document.getElementById('loginForm');
+    if (form) {
+        form.addEventListener('submit', handleLogin);
+    }
+
+    // Check if already logged in
+    const authToken = localStorage.getItem('authToken');
+    if (authToken) {
+        // Verify token
+        verifyAuthToken(authToken).then(isValid => {
+            if (isValid) {
+                window.location.href = '/puzzle.html'; // Redirect to puzzle if already logged in
+            }
+        });
+    }
+}
+
+// ===== AUTH HELPERS =====
+async function verifyAuthToken(token) {
+    try {
+        // Make an authenticated request to award-points endpoint
+        // This will return 403 if token is invalid
+        const response = await fetch('/api/award-points', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({}) // Empty body - will fail but that's ok
+        });
+        return response.status !== 403; // Token is valid if not forbidden
+    } catch (error) {
+        console.error('Token verification error:', error);
+        return false;
+    }
+}
+
+// Helper function for making authenticated API requests
+async function makeAuthenticatedRequest(url, options = {}) {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        throw new Error('No auth token available');
+    }
+
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+    };
+
+    const response = await fetch(url, {
+        ...options,
+        headers
+    });
+
+    // If token is invalid, logout
+    if (response.status === 403) {
+        handleLogout();
+        throw new Error('Authentication failed');
+    }
+
+    return response;
+}
 
 // ===== FORM VALIDATION ENHANCEMENTS =====
 document.querySelectorAll('input[required]').forEach(input => {

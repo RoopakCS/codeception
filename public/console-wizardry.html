@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Wizardry | Codeception 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <main class="challenge-section">
+        <div class="container">
+            <div class="challenge-card">
+                <div class="scanning-line"></div>
+                
+                <div class="challenge-header">
+                    <div class="terminal-icon glitch">
+                        <span class="code-bracket">&lt;</span>
+                        <span>/</span>
+                        <span class="code-bracket">&gt;</span>
+                    </div>
+                    <h1 class="challenge-title glow-text">STAGE 9: CONSOLE MASTER</h1>
+                </div>
+
+                <div class="challenge-content">
+                    <p class="instruction-text">Time to master the console...</p>
+                    <p class="hint-text">💡 Use console.table(), console.group(), and inspect objects</p>
+                    
+                    <div class="code-display">
+                        <pre>Try typing in console:
+> window.challengeData
+> console.table(window.participants)
+> window.secretFunction()</pre>
+                    </div>
+                    
+                    <button onclick="initConsoleChallenge()" class="btn btn-secondary">
+                        <span>🎮 Initialize Console Challenge</span>
+                    </button>
+                    
+                    <div id="consoleHint" style="margin-top: 20px;"></div>
+                </div>
+
+                <div class="decode-input-section" style="margin-top: 30px;">
+                    <label for="consoleAnswer">What's the password from challengeData?</label>
+                    <input type="text" id="consoleAnswer" placeholder="Use console to find it">
+                    <button onclick="checkConsole()" class="btn btn-primary">
+                        <span>Submit Answer</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                    <div id="consoleResult"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Hidden challenge data in window object
+        window.challengeData = {
+            stage: 9,
+            name: "Console Wizardry",
+            password: "debugger_master_2025",
+            nextStage: "/sources-final",
+            hint: "Objects in console are expandable",
+            _secret: {
+                developer: true,
+                level: "expert"
+            }
+        };
+
+        window.participants = [
+            { name: "Alice", score: 90, status: "active" },
+            { name: "Bob", score: 85, status: "completed" },
+            { name: "Charlie", score: 95, status: "active" }
+        ];
+
+        window.secretFunction = function() {
+            console.group('🔐 Secret Information');
+            console.log('%cThe password is hidden in challengeData object', 'color: #00FFFF; font-size: 16px;');
+            console.log('Expand the object to find it...');
+            console.table([
+                { key: 'stage', value: challengeData.stage },
+                { key: 'name', value: challengeData.name }
+            ]);
+            console.groupEnd();
+            return "Check the challengeData object!";
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            awardPoints(10, 'stage9_console');
+            
+            setTimeout(() => {
+                console.log('%c🎯 Console Challenge Loaded!', 'background: #9D4EDD; color: white; padding: 5px 10px; font-size: 16px;');
+                console.log('Try these commands:');
+                console.log('  1. window.challengeData');
+                console.log('  2. console.table(window.participants)');
+                console.log('  3. window.secretFunction()');
+            }, 1000);
+        });
+
+        function initConsoleChallenge() {
+            document.getElementById('consoleHint').innerHTML = 
+                `<div class="success-msg">✓ Challenge initialized! Open Console and explore window.challengeData</div>`;
+            
+            console.clear();
+            console.log('%c═══════════════════════════════════════', 'color: #00FFFF');
+            console.log('%c   CONSOLE CHALLENGE ACTIVATED', 'color: #00FF9C; font-size: 18px; font-weight: bold;');
+            console.log('%c═══════════════════════════════════════', 'color: #00FFFF');
+            console.log('');
+            console.log('Available objects:');
+            console.log('  • window.challengeData');
+            console.log('  • window.participants');
+            console.log('  • window.secretFunction()');
+            console.log('');
+            console.warn('⚠️ Expand objects to see all properties!');
+        }
+
+        function checkConsole() {
+            const input = document.getElementById('consoleAnswer').value.trim();
+            const result = document.getElementById('consoleResult');
+            
+            // Answer: debugger_master_2025
+            if (input === 'debugger_master_2025') {
+                result.innerHTML = '<div class="success-msg">✓ Excellent! Final stage awaits at /sources-final</div>';
+                result.className = 'result-message success';
+                
+                awardPoints(10, 'stage9_console_found');
+                
+                setTimeout(() => {
+                    window.location.href = '/sources-final';
+                }, 2500);
+            } else {
+                result.innerHTML = '<div class="error-msg">✗ Explore window.challengeData in console</div>';
+                result.className = 'result-message error';
+            }
+        }
+
+        async function awardPoints(points, stage) {
+            const participantCode = localStorage.getItem('participantCode');
+            const participantEmail = localStorage.getItem('participantEmail');
+            
+            if (!participantCode || !participantEmail) return;
+
+            try {
+                await fetch('/api/award-points', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        participantCode, 
+                        email: participantEmail,
+                        points, 
+                        stage 
+                    })
+                });
+            } catch (error) {
+                console.error('Error awarding points:', error);
+            }
+        }
+    </script>
+</body>
+</html>
