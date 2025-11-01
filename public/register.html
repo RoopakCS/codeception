@@ -1,225 +1,305 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register | Codeception</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="animated-bg"></div>
-    
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="glow-text">CODECEPTION</span>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Register | Codeception</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="animated-bg"></div>
+
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="glow-text">CODECEPTION</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="register.html" class="active">Register</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li><a href="puzzle.html">Puzzle Access</a></li>
+                </ul>
             </div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="register.html" class="active">Register</a></li>
-                <li><a href="leaderboard.html">Leaderboard</a></li>
-                <li><a href="puzzle.html">Puzzle Access</a></li>
-            </ul>
-        </div>
-    </nav>
+        </nav>
 
-    <main class="content-section">
-        <div class="container">
-            <div class="page-header">
-                <h1 class="page-title glow-text">Participant Registration</h1>
-                <div class="title-underline"></div>
-                <p class="page-subtitle">Create your account to participate in Codeception 2025</p>
-            </div>
+        <main class="content-section">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title glow-text">
+                        Participant Registration
+                    </h1>
+                    <div class="title-underline"></div>
+                    <p class="page-subtitle">
+                        Create your account to participate in Codeception 2025
+                    </p>
+                </div>
 
-            <div class="form-container">
-                <div class="form-card">
-                    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
-                        <div class="spinner"></div>
-                        <p>Processing registration...</p>
-                    </div>
-
-                    <div id="successMessage" class="message success-message" style="display: none;">
-                        <div class="message-icon">✓</div>
-                        <h3>Registration Successful!</h3>
-                        <p>You have been successfully registered for Codeception 2025.</p>
-                        <div class="participant-code-display">
-                            <p class="code-label">Your Participant Code:</p>
-                            <p class="team-code"><span id="registeredParticipantCode"></span></p>
-                            <p class="code-note">⚠️ <strong>Save this code!</strong> You'll need it along with your email to access the puzzle.</p>
-                        </div>
-                        <p class="welcome-message">Welcome, <span id="registeredName"></span>!</p>
-                        <a href="puzzle.html" class="btn btn-primary">
-                            <span>Go to Puzzle Access</span>
-                            <div class="btn-glow"></div>
-                        </a>
-                    </div>
-
-                    <div id="errorMessage" class="message error-message" style="display: none;">
-                        <div class="message-icon">✕</div>
-                        <h3>Registration Failed</h3>
-                        <p id="errorText"></p>
-                    </div>
-
-                    <form id="registrationForm" class="registration-form">
-                        <div class="form-section">
-                            <h3 class="section-title">Participant Information</h3>
-                            
-                            <div class="form-group">
-                                <label for="name">Full Name *</label>
-                                <input 
-                                    type="text" 
-                                    id="name" 
-                                    name="name" 
-                                    required 
-                                    placeholder="Enter your full name"
-                                    maxlength="100"
-                                >
-                                <span class="input-focus-border"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="registerNumber">Register Number *</label>
-                                <input 
-                                    type="text" 
-                                    id="registerNumber" 
-                                    name="registerNumber" 
-                                    required 
-                                    placeholder="e.g., 21CS001"
-                                    maxlength="20"
-                                    style="text-transform: uppercase;"
-                                >
-                                <span class="input-focus-border"></span>
-                                <small class="input-hint">Your college register number</small>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="email">Email ID *</label>
-                                <input 
-                                    type="email" 
-                                    id="email" 
-                                    name="email" 
-                                    required 
-                                    placeholder="you@example.com"
-                                >
-                                <span class="input-focus-border"></span>
-                                <small class="input-hint">You'll use this to log in</small>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="department">Department *</label>
-                                    <select 
-                                        id="department" 
-                                        name="department" 
-                                        required
-                                    >
-                                        <option value="">Select Department</option>
-                                        <option value="Computer Science">Computer Science</option>
-                                        <option value="Information Technology">Information Technology</option>
-                                        <option value="Electronics">Electronics & Communication</option>
-                                        <option value="Electrical">Electrical & Electronics</option>
-                                        <option value="Mechanical">Mechanical</option>
-                                        <option value="Civil">Civil</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <span class="input-focus-border"></span>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="year">Year *</label>
-                                    <select 
-                                        id="year" 
-                                        name="year" 
-                                        required
-                                    >
-                                        <option value="">Select Year</option>
-                                        <option value="1">1st Year</option>
-                                        <option value="2">2nd Year</option>
-                                        <option value="3">3rd Year</option>
-                                        <option value="4">4th Year</option>
-                                    </select>
-                                    <span class="input-focus-border"></span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="password">Password *</label>
-                                <input 
-                                    type="password" 
-                                    id="password" 
-                                    name="password" 
-                                    required 
-                                    placeholder="Choose a strong password"
-                                    minlength="6"
-                                >
-                                <span class="input-focus-border"></span>
-                                <small class="input-hint">Minimum 6 characters</small>
-                            </div>
+                <div class="form-container">
+                    <div class="form-card">
+                        <div
+                            id="loadingSpinner"
+                            class="loading-spinner"
+                            style="display: none"
+                        >
+                            <div class="spinner"></div>
+                            <p>Processing registration...</p>
                         </div>
 
-                        <div class="form-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="agreeTerms" required>
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">
-                                    I agree to the competition rules and code of conduct *
-                                </span>
-                            </label>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary btn-large">
-                                <span>Register Now</span>
+                        <div
+                            id="successMessage"
+                            class="message success-message"
+                            style="display: none"
+                        >
+                            <div class="message-icon">✓</div>
+                            <h3>Registration Successful!</h3>
+                            <p>
+                                You have been successfully registered for
+                                Codeception 2025.
+                            </p>
+                            <div class="participant-code-display">
+                                <p class="code-label">Your Participant Code:</p>
+                                <p class="team-code">
+                                    <span id="registeredParticipantCode"></span>
+                                </p>
+                                <p class="code-note">
+                                    ⚠️ <strong>Save this code!</strong> You'll
+                                    need it along with your email to access the
+                                    puzzle.
+                                </p>
+                            </div>
+                            <p class="welcome-message">
+                                Welcome, <span id="registeredName"></span>!
+                            </p>
+                            <a href="puzzle.html" class="btn btn-primary">
+                                <span>Go to Puzzle Access</span>
                                 <div class="btn-glow"></div>
-                            </button>
-                            <button type="reset" class="btn btn-outline">
-                                <span>Clear Form</span>
-                            </button>
+                            </a>
                         </div>
 
-                        <p class="form-note">* Required fields</p>
-                    </form>
-                </div>
+                        <div
+                            id="errorMessage"
+                            class="message error-message"
+                            style="display: none"
+                        >
+                            <div class="message-icon">✕</div>
+                            <h3>Registration Failed</h3>
+                            <p id="errorText"></p>
+                        </div>
 
-                <div class="info-sidebar">
-                    <div class="sidebar-card">
-                        <h3>Registration Guide</h3>
-                        <ul>
-                            <li>Use your official college register number</li>
-                            <li>Provide a valid email address</li>
-                            <li>Choose a strong password</li>
-                            <li>Save your participant code after registration</li>
-                            <li>You'll need your email and participant code to log in</li>
-                        </ul>
+                        <form id="registrationForm" class="registration-form">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    Participant Information
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="name">Full Name *</label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        name="name"
+                                        required
+                                        placeholder="Enter your full name"
+                                        maxlength="100"
+                                    />
+                                    <span class="input-focus-border"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="registerNumber"
+                                        >Register Number *</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="registerNumber"
+                                        name="registerNumber"
+                                        required
+                                        placeholder="e.g., 21CS001"
+                                        maxlength="20"
+                                        style="text-transform: uppercase"
+                                    />
+                                    <span class="input-focus-border"></span>
+                                    <small class="input-hint"
+                                        >Your college register number</small
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">Email ID *</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        required
+                                        placeholder="you@example.com"
+                                    />
+                                    <span class="input-focus-border"></span>
+                                    <small class="input-hint"
+                                        >You'll use this to log in</small
+                                    >
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="department"
+                                            >Department *</label
+                                        >
+                                        <select
+                                            id="department"
+                                            name="department"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select Department
+                                            </option>
+                                            <option value="Computer Science">
+                                                Computer Science
+                                            </option>
+                                            <option
+                                                value="Information Technology"
+                                            >
+                                                Information Technology
+                                            </option>
+                                            <option value="Electronics">
+                                                Electronics & Communication
+                                            </option>
+                                            <option value="Electrical">
+                                                Electrical & Electronics
+                                            </option>
+                                            <option value="Mechanical">
+                                                Mechanical
+                                            </option>
+                                            <option value="Civil">Civil</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        <span class="input-focus-border"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="year">Year *</label>
+                                        <select id="year" name="year" required>
+                                            <option value="">
+                                                Select Year
+                                            </option>
+                                            <option value="1">1st Year</option>
+                                            <option value="2">2nd Year</option>
+                                            <option value="3">3rd Year</option>
+                                            <option value="4">4th Year</option>
+                                        </select>
+                                        <span class="input-focus-border"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password *</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        required
+                                        placeholder="Choose a strong password"
+                                        minlength="6"
+                                    />
+                                    <span class="input-focus-border"></span>
+                                    <small class="input-hint"
+                                        >Minimum 6 characters</small
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        id="agreeTerms"
+                                        required
+                                    />
+                                    <span class="checkbox-custom"></span>
+                                    <span class="checkbox-text">
+                                        I agree to the competition rules and
+                                        code of conduct *
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="form-actions">
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-large"
+                                >
+                                    <span>Register Now</span>
+                                    <div class="btn-glow"></div>
+                                </button>
+                                <button type="reset" class="btn btn-outline">
+                                    <span>Clear Form</span>
+                                </button>
+                            </div>
+
+                            <p class="form-note">* Required fields</p>
+                        </form>
                     </div>
 
-                    <div class="sidebar-card">
-                        <h3>What Happens Next?</h3>
-                        <ol>
-                            <li>Complete the registration form</li>
-                            <li>Receive your unique participant code</li>
-                            <li>Save your participant code securely</li>
-                            <li>Wait for the event to begin</li>
-                            <li>Log in with email & code to access puzzles</li>
-                            <li>Compete and climb the leaderboard!</li>
-                        </ol>
-                    </div>
+                    <div class="info-sidebar">
+                        <div class="sidebar-card">
+                            <h3>Registration Guide</h3>
+                            <ul>
+                                <li>
+                                    Use your official college register number
+                                </li>
+                                <li>Provide a valid email address</li>
+                                <li>Choose a strong password</li>
+                                <li>
+                                    Save your participant code after
+                                    registration
+                                </li>
+                                <li>
+                                    You'll need your email and participant code
+                                    to log in
+                                </li>
+                            </ul>
+                        </div>
 
-                    <div class="sidebar-card">
-                        <h3>⚠️ Important</h3>
-                        <p>This is an <strong>individual event</strong>. Each participant competes independently. Make sure to save your participant code - you'll need it to access the puzzle portal!</p>
+                        <div class="sidebar-card">
+                            <h3>What Happens Next?</h3>
+                            <ol>
+                                <li>Complete the registration form</li>
+                                <li>Receive your unique participant code</li>
+                                <li>Save your participant code securely</li>
+                                <li>Wait for the event to begin</li>
+                                <li>
+                                    Log in with email & code to access puzzles
+                                </li>
+                                <li>Compete and climb the leaderboard!</li>
+                            </ol>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>⚠️ Important</h3>
+                            <p>
+                                This is an <strong>individual event</strong>.
+                                Each participant competes independently. Make
+                                sure to save your participant code - you'll need
+                                it to access the puzzle portal!
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
 
-    <footer class="footer">
-        <p>&copy; 2025 Codeception. All rights reserved. | Powered by Code & Curiosity</p>
-    </footer>
+        <footer class="footer">
+            <p>
+                &copy; 2025 Codeception. All rights reserved. | Powered by Code
+                & Curiosity
+            </p>
+        </footer>
 
-    <script src="script.js"></script>
-</body>
+        <script src="script.js"></script>
+    </body>
 </html>

@@ -1,108 +1,148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Challenge | Codeception 2025</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="/static/decodeFinal.js"></script>
-</head>
-<body>
-    <div class="animated-bg"></div>
-    
-    <main class="challenge-section">
-        <div class="container">
-            <div class="challenge-card">
-                <div class="scanning-line"></div>
-                
-                <div class="challenge-header">
-                    <div class="terminal-icon glitch">
-                        <span class="code-bracket">&lt;</span>
-                        <span>/</span>
-                        <span class="code-bracket">&gt;</span>
-                    </div>
-                    <h1 class="challenge-title glow-text">FINAL STAGE</h1>
-                </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Final Challenge | Codeception 2025</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+        <script src="/static/decodeFinal.js"></script>
+    </head>
+    <body>
+        <div class="animated-bg"></div>
 
-                <div class="scrambled-section">
-                    <div class="glitch-text" data-text="Y0U'R3 4LM0ST TH3R3">
-                        Y0U'R3 4LM0ST TH3R3
-                    </div>
-                    
-                    <div class="scrambled-message">
-                        <p>01010100 01101000 01100101 00100000 01100101 01101110 01100100</p>
-                        <p>01101001 01110011 00100000 01101110 01100101 01100001 01110010</p>
-                    </div>
-                </div>
+        <main class="challenge-section">
+            <div class="container">
+                <div class="challenge-card">
+                    <div class="scanning-line"></div>
 
-                <div class="final-input-section">
-                    <p class="riddle-text">Check the console for your final riddle...</p>
-                    <label for="finalAnswer">Your Answer:</label>
-                    <input type="text" id="finalAnswer" placeholder="Type your answer here">
-                    <button onclick="checkFinalAnswer()" class="btn btn-primary btn-large">
-                        <span>Submit Final Answer</span>
-                        <div class="btn-glow"></div>
-                    </button>
-                    <div id="finalResult"></div>
+                    <div class="challenge-header">
+                        <div class="terminal-icon glitch">
+                            <span class="code-bracket">&lt;</span>
+                            <span>/</span>
+                            <span class="code-bracket">&gt;</span>
+                        </div>
+                        <h1 class="challenge-title glow-text">FINAL STAGE</h1>
+                    </div>
+
+                    <div class="scrambled-section">
+                        <div
+                            class="glitch-text"
+                            data-text="Y0U'R3 4LM0ST TH3R3"
+                        >
+                            Y0U'R3 4LM0ST TH3R3
+                        </div>
+
+                        <div class="scrambled-message">
+                            <p>
+                                01010100 01101000 01100101 00100000 01100101
+                                01101110 01100100
+                            </p>
+                            <p>
+                                01101001 01110011 00100000 01101110 01100101
+                                01100001 01110010
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="final-input-section">
+                        <p class="riddle-text">
+                            Check the console for your final riddle...
+                        </p>
+                        <label for="finalAnswer">Your Answer:</label>
+                        <input
+                            type="text"
+                            id="finalAnswer"
+                            placeholder="Type your answer here"
+                        />
+                        <button
+                            onclick="checkFinalAnswer()"
+                            class="btn btn-primary btn-large"
+                        >
+                            <span>Submit Final Answer</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <div id="finalResult"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
 
-    <script src="script.js"></script>
-    <script>
-        function checkFinalAnswer() {
-            const input = document.getElementById('finalAnswer').value.trim().toLowerCase();
-            const result = document.getElementById('finalResult');
-            
-            // Accept various color formats for cyan
-            const validAnswers = [
-                'cyan', '#00ffff', '00ffff', '#0ff', '0ff',
-                'rgb(0,255,255)', 'rgb(0, 255, 255)',
-                'aqua', 'turquoise','blue'
-            ];
-            
-            if (validAnswers.includes(input.replace(/\s+/g, ''))) {
-                result.innerHTML = '<div class="success-msg">🎉 CORRECT! But wait... there\'s more. Check localStorage...</div>';
-                result.className = 'result-message success';
-                
-                // Store a clue in localStorage
-                localStorage.setItem('stage5_key', 'Y0dKaGRtVnRZWE4wWlhJPQ==');
-                
-                // Award final points
-                awardFinalPoints();
-                
-                setTimeout(() => {
-                    console.log('%c🔐 Stage 5 unlocked! Decode the key in localStorage: stage5_key', 'color: #9D4EDD; font-size: 14px; font-weight: bold;');
-                }, 2000);
-            } else {
-                result.innerHTML = '<div class="error-msg">✗ Incorrect. Think about the main accent colors of this website...</div>';
-                result.className = 'result-message error';
+        <script src="script.js"></script>
+        <script>
+            function checkFinalAnswer() {
+                const input = document
+                    .getElementById('finalAnswer')
+                    .value.trim()
+                    .toLowerCase();
+                const result = document.getElementById('finalResult');
+
+                // Accept various color formats for cyan
+                const validAnswers = [
+                    'cyan',
+                    '#00ffff',
+                    '00ffff',
+                    '#0ff',
+                    '0ff',
+                    'rgb(0,255,255)',
+                    'rgb(0, 255, 255)',
+                    'aqua',
+                    'turquoise',
+                    'blue',
+                ];
+
+                if (validAnswers.includes(input.replace(/\s+/g, ''))) {
+                    result.innerHTML =
+                        '<div class="success-msg">🎉 CORRECT! But wait... there\'s more. Check localStorage...</div>';
+                    result.className = 'result-message success';
+
+                    // Store a clue in localStorage
+                    localStorage.setItem(
+                        'stage5_key',
+                        'Y0dKaGRtVnRZWE4wWlhJPQ=='
+                    );
+
+                    // Award final points
+                    awardFinalPoints();
+
+                    setTimeout(() => {
+                        console.log(
+                            '%c🔐 Stage 5 unlocked! Decode the key in localStorage: stage5_key',
+                            'color: #9D4EDD; font-size: 14px; font-weight: bold;'
+                        );
+                    }, 2000);
+                } else {
+                    result.innerHTML =
+                        '<div class="error-msg">✗ Incorrect. Think about the main accent colors of this website...</div>';
+                    result.className = 'result-message error';
+                }
             }
-        }
 
-        async function awardFinalPoints() {
-            const participantCode = localStorage.getItem('participantCode');
-            const participantEmail = localStorage.getItem('participantEmail');
-            
-            if (!participantCode || !participantEmail) return;
+            async function awardFinalPoints() {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
 
-            try {
-                await fetch('/api/award-points', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        participantCode, 
-                        email: participantEmail,
-                        points: 10, 
-                        stage: 'stage4_final_challenge'
-                    })
-                });
-            } catch (error) {
-                console.error('Error awarding points:', error);
+                if (!participantCode || !participantEmail) return;
+
+                try {
+                    await fetch('/api/award-points', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points: 10,
+                            stage: 'stage4_final_challenge',
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error awarding points:', error);
+                }
             }
-        }
-    </script>
-</body>
+        </script>
+    </body>
 </html>

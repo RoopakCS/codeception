@@ -1,112 +1,140 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Master | Codeception 2025</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="animated-bg"></div>
-    
-    <main class="challenge-section">
-        <div class="container">
-            <div class="challenge-card">
-                <div class="scanning-line"></div>
-                
-                <div class="challenge-header">
-                    <div class="terminal-icon">
-                        <span class="code-bracket">&lt;</span>
-                        <span>/</span>
-                        <span class="code-bracket">&gt;</span>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cookie Master | Codeception 2025</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="animated-bg"></div>
+
+        <main class="challenge-section">
+            <div class="container">
+                <div class="challenge-card">
+                    <div class="scanning-line"></div>
+
+                    <div class="challenge-header">
+                        <div class="terminal-icon">
+                            <span class="code-bracket">&lt;</span>
+                            <span>/</span>
+                            <span class="code-bracket">&gt;</span>
+                        </div>
+                        <h1 class="challenge-title glow-text">
+                            STAGE 7: COOKIE JAR
+                        </h1>
                     </div>
-                    <h1 class="challenge-title glow-text">STAGE 7: COOKIE JAR</h1>
-                </div>
 
-                <div class="challenge-content">
-                    <p class="instruction-text">Cookies aren't just for eating...</p>
-                    <p class="hint-text">💡 Application tab → Cookies → localhost</p>
-                    
-                    <button onclick="bakeCookie()" class="btn btn-secondary">
-                        <span>🍪 Bake a Cookie</span>
-                    </button>
-                    
-                    <div id="cookieHint" style="margin-top: 20px;"></div>
-                </div>
+                    <div class="challenge-content">
+                        <p class="instruction-text">
+                            Cookies aren't just for eating...
+                        </p>
+                        <p class="hint-text">
+                            💡 Application tab → Cookies → localhost
+                        </p>
 
-                <div class="decode-input-section" style="margin-top: 30px;">
-                    <label for="cookieAnswer">What's the value of 'secret_clue' cookie?</label>
-                    <input type="text" id="cookieAnswer" placeholder="Check Application → Cookies">
-                    <button onclick="checkCookie()" class="btn btn-primary">
-                        <span>Submit Answer</span>
-                        <div class="btn-glow"></div>
-                    </button>
-                    <div id="cookieResult"></div>
+                        <button
+                            onclick="bakeCookie()"
+                            class="btn btn-secondary"
+                        >
+                            <span>🍪 Bake a Cookie</span>
+                        </button>
+
+                        <div id="cookieHint" style="margin-top: 20px"></div>
+                    </div>
+
+                    <div class="decode-input-section" style="margin-top: 30px">
+                        <label for="cookieAnswer"
+                            >What's the value of 'secret_clue' cookie?</label
+                        >
+                        <input
+                            type="text"
+                            id="cookieAnswer"
+                            placeholder="Check Application → Cookies"
+                        />
+                        <button onclick="checkCookie()" class="btn btn-primary">
+                            <span>Submit Answer</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <div id="cookieResult"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
 
-    <script src="script.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            awardPoints(10, 'stage7_cookies');
-        });
+        <script src="script.js"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                awardPoints(10, 'stage7_cookies');
+            });
 
-        function bakeCookie() {
-            // Set a cookie with the next clue
-            document.cookie = "secret_clue=performance_tab_awaits; path=/; max-age=3600";
-            document.cookie = "stage=7; path=/; max-age=3600";
-            document.cookie = "hint=check_all_cookies; path=/; max-age=3600";
-            
-            document.getElementById('cookieHint').innerHTML = 
-                `<div class="success-msg">✓ Cookie baked! Check Application → Storage → Cookies → http://localhost:3000</div>`;
-            
-            console.log('%c🍪 Cookies set! Inspect them in the Application tab', 'color: #00FF9C; font-size: 14px;');
-        }
+            function bakeCookie() {
+                // Set a cookie with the next clue
+                document.cookie =
+                    'secret_clue=performance_tab_awaits; path=/; max-age=3600';
+                document.cookie = 'stage=7; path=/; max-age=3600';
+                document.cookie =
+                    'hint=check_all_cookies; path=/; max-age=3600';
 
-        function checkCookie() {
-            const input = document.getElementById('cookieAnswer').value.trim();
-            const result = document.getElementById('cookieResult');
-            
-            // Answer: performance_tab_awaits
-            if (input === 'performance_tab_awaits') {
-                result.innerHTML = '<div class="success-msg">✓ Perfect! Time to check Performance. Visit /performance-puzzle</div>';
-                result.className = 'result-message success';
-                
-                awardPoints(10, 'stage7_cookie_found');
-                
-                setTimeout(() => {
-                    window.location.href = '/performance-puzzle';
-                }, 2500);
-            } else {
-                result.innerHTML = '<div class="error-msg">✗ Look in Application tab → Cookies</div>';
-                result.className = 'result-message error';
+                document.getElementById('cookieHint').innerHTML =
+                    `<div class="success-msg">✓ Cookie baked! Check Application → Storage → Cookies → http://localhost:3000</div>`;
+
+                console.log(
+                    '%c🍪 Cookies set! Inspect them in the Application tab',
+                    'color: #00FF9C; font-size: 14px;'
+                );
             }
-        }
 
-        async function awardPoints(points, stage) {
-            const participantCode = localStorage.getItem('participantCode');
-            const participantEmail = localStorage.getItem('participantEmail');
-            
-            if (!participantCode || !participantEmail) return;
+            function checkCookie() {
+                const input = document
+                    .getElementById('cookieAnswer')
+                    .value.trim();
+                const result = document.getElementById('cookieResult');
 
-            try {
-                await fetch('/api/award-points', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        participantCode, 
-                        email: participantEmail,
-                        points, 
-                        stage 
-                    })
-                });
-            } catch (error) {
-                console.error('Error awarding points:', error);
+                // Answer: performance_tab_awaits
+                if (input === 'performance_tab_awaits') {
+                    result.innerHTML =
+                        '<div class="success-msg">✓ Perfect! Time to check Performance. Visit /performance-puzzle</div>';
+                    result.className = 'result-message success';
+
+                    awardPoints(10, 'stage7_cookie_found');
+
+                    setTimeout(() => {
+                        window.location.href = '/performance-puzzle';
+                    }, 2500);
+                } else {
+                    result.innerHTML =
+                        '<div class="error-msg">✗ Look in Application tab → Cookies</div>';
+                    result.className = 'result-message error';
+                }
             }
-        }
-    </script>
-</body>
+
+            async function awardPoints(points, stage) {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+
+                if (!participantCode || !participantEmail) return;
+
+                try {
+                    await fetch('/api/award-points', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points,
+                            stage,
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error awarding points:', error);
+                }
+            }
+        </script>
+    </body>
 </html>

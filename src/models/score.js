@@ -5,50 +5,52 @@ const scoreSchema = new mongoose.Schema({
     participantId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Participant'
+        ref: 'Participant',
     },
     name: {
         type: String,
-        required: true
+        required: true,
     },
     registerNumber: {
         type: String,
-        required: true
+        required: true,
     },
     score: {
         type: Number,
-        default: 0
+        default: 0,
     },
     timeTaken: {
         type: Number,
-        default: 0
+        default: 0,
     },
     status: {
         type: String,
         enum: ['pending', 'active', 'completed'],
-        default: 'pending'
+        default: 'pending',
     },
     lastUpdated: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
-    puzzlesSolved: [{
-        puzzleId: String,
-        solvedAt: Date,
-        points: Number
-    }],
+    puzzlesSolved: [
+        {
+            puzzleId: String,
+            solvedAt: Date,
+            points: Number,
+        },
+    ],
     completedStages: {
         type: [String],
-        default: []
+        default: [],
     },
     startTime: {
         type: Date,
-        default: null
+        default: null,
     },
     completionTime: {
         type: Date,
-        default: null
-    }
+        default: null,
+    },
 });
 
 // Create indexes for better query performance

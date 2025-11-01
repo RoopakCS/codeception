@@ -1,111 +1,141 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gravemaster | Codeception 2025</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="animated-bg"></div>
-    
-    <main class="challenge-section">
-        <div class="container">
-            <div class="challenge-card">
-                <div class="scanning-line"></div>
-                
-                <div class="challenge-header">
-                    <div class="terminal-icon">
-                        <span class="code-bracket">&lt;</span>
-                        <span>/</span>
-                        <span class="code-bracket">&gt;</span>
-                    </div>
-                    <h1 class="challenge-title glow-text">STAGE 5: STORAGE MASTER</h1>
-                </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gravemaster | Codeception 2025</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="animated-bg"></div>
 
-                <div class="challenge-content">
-                    <p class="instruction-text">You found the localStorage key! Now decode it...</p>
-                    <p class="hint-text">💡 It's double base64 encoded. Decode twice!</p>
-                    
-                    <div class="code-display">
-                        <pre>Key found in localStorage: <span id="displayKey">stage5_key</span></pre>
-                    </div>
-                </div>
+        <main class="challenge-section">
+            <div class="container">
+                <div class="challenge-card">
+                    <div class="scanning-line"></div>
 
-                <div class="decode-input-section">
-                    <label for="storageAnswer">What does it decode to?</label>
-                    <input type="text" id="storageAnswer" placeholder="Decoded message">
-                    <button onclick="checkStorage()" class="btn btn-primary">
-                        <span>Submit Answer</span>
-                        <div class="btn-glow"></div>
-                    </button>
-                    <div id="storageResult"></div>
+                    <div class="challenge-header">
+                        <div class="terminal-icon">
+                            <span class="code-bracket">&lt;</span>
+                            <span>/</span>
+                            <span class="code-bracket">&gt;</span>
+                        </div>
+                        <h1 class="challenge-title glow-text">
+                            STAGE 5: STORAGE MASTER
+                        </h1>
+                    </div>
+
+                    <div class="challenge-content">
+                        <p class="instruction-text">
+                            You found the localStorage key! Now decode it...
+                        </p>
+                        <p class="hint-text">
+                            💡 It's double base64 encoded. Decode twice!
+                        </p>
+
+                        <div class="code-display">
+                            <pre>Key found in localStorage: <span id="displayKey">stage5_key</span></pre>
+                        </div>
+                    </div>
+
+                    <div class="decode-input-section">
+                        <label for="storageAnswer"
+                            >What does it decode to?</label
+                        >
+                        <input
+                            type="text"
+                            id="storageAnswer"
+                            placeholder="Decoded message"
+                        />
+                        <button
+                            onclick="checkStorage()"
+                            class="btn btn-primary"
+                        >
+                            <span>Submit Answer</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <div id="storageResult"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
 
-    <script src="script.js"></script>
-    <script>
-        // Display the actual value from localStorage
-        window.addEventListener('DOMContentLoaded', () => {
-            const key = localStorage.getItem('stage5_key');
-            if (key) {
-                document.getElementById('displayKey').textContent = key;
-            } else {
-                document.getElementById('storageResult').innerHTML = 
-                    '<div class="error-msg">⚠️ You need to complete Stage 4 first!</div>';
+        <script src="script.js"></script>
+        <script>
+            // Display the actual value from localStorage
+            window.addEventListener('DOMContentLoaded', () => {
+                const key = localStorage.getItem('stage5_key');
+                if (key) {
+                    document.getElementById('displayKey').textContent = key;
+                } else {
+                    document.getElementById('storageResult').innerHTML =
+                        '<div class="error-msg">⚠️ You need to complete Stage 4 first!</div>';
+                }
+
+                // Award points for finding this page
+                awardPoints(10, 'stage5_localStorage');
+            });
+
+            function checkStorage() {
+                const input = document
+                    .getElementById('storageAnswer')
+                    .value.trim()
+                    .toLowerCase();
+                const result = document.getElementById('storageResult');
+
+                // Answer: "gravemaster" (Y0dKaGRtVnRZWE4wWlhJPQ== -> base64 -> YGJhdmVtYXN0ZXI= -> base64 -> gravemaster)
+                if (input === 'gravemaster') {
+                    result.innerHTML =
+                        '<div class="success-msg">✓ Perfect! Now check the Network tab and visit /api/session-data</div>';
+                    result.className = 'result-message success';
+
+                    // Store session ID in sessionStorage
+                    sessionStorage.setItem(
+                        'challenge_session',
+                        'sess_' + Math.random().toString(36).substr(2, 9)
+                    );
+
+                    awardPoints(10, 'stage5_decode');
+
+                    setTimeout(() => {
+                        console.log(
+                            '%c📡 Stage 6: Check your Network tab when you visit /api/session-data',
+                            'color: #00FFFF; font-size: 14px;'
+                        );
+                    }, 2000);
+                } else {
+                    result.innerHTML =
+                        '<div class="error-msg">✗ Incorrect. Try decoding the base64 string twice!</div>';
+                    result.className = 'result-message error';
+                }
             }
-            
-            // Award points for finding this page
-            awardPoints(10, 'stage5_localStorage');
-        });
 
-        function checkStorage() {
-            const input = document.getElementById('storageAnswer').value.trim().toLowerCase();
-            const result = document.getElementById('storageResult');
-            
-            // Answer: "gravemaster" (Y0dKaGRtVnRZWE4wWlhJPQ== -> base64 -> YGJhdmVtYXN0ZXI= -> base64 -> gravemaster)
-            if (input === 'gravemaster') {
-                result.innerHTML = '<div class="success-msg">✓ Perfect! Now check the Network tab and visit /api/session-data</div>';
-                result.className = 'result-message success';
-                
-                // Store session ID in sessionStorage
-                sessionStorage.setItem('challenge_session', 'sess_' + Math.random().toString(36).substr(2, 9));
-                
-                awardPoints(10, 'stage5_decode');
-                
-                setTimeout(() => {
-                    console.log('%c📡 Stage 6: Check your Network tab when you visit /api/session-data', 'color: #00FFFF; font-size: 14px;');
-                }, 2000);
-            } else {
-                result.innerHTML = '<div class="error-msg">✗ Incorrect. Try decoding the base64 string twice!</div>';
-                result.className = 'result-message error';
+            async function awardPoints(points, stage) {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+
+                if (!participantCode || !participantEmail) return;
+
+                try {
+                    await fetch('/api/award-points', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points,
+                            stage,
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error awarding points:', error);
+                }
             }
-        }
-
-        async function awardPoints(points, stage) {
-            const participantCode = localStorage.getItem('participantCode');
-            const participantEmail = localStorage.getItem('participantEmail');
-            
-            if (!participantCode || !participantEmail) return;
-
-            try {
-                await fetch('/api/award-points', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        participantCode, 
-                        email: participantEmail,
-                        points, 
-                        stage 
-                    })
-                });
-            } catch (error) {
-                console.error('Error awarding points:', error);
-            }
-        }
-    </script>
-</body>
+        </script>
+    </body>
 </html>

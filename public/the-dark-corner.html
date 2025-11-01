@@ -1,76 +1,81 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>??? | Codeception 2025</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: #000000;
-        }
-        .dark-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.05;
-            transition: opacity 0.5s;
-        }
-        .dark-container:hover {
-            opacity: 0.1;
-        }
-        .hidden-message {
-            font-size: 2rem;
-            color: #111;
-            font-family: 'Orbitron', sans-serif;
-        }
-    </style>
-</head>
-<body>
-    <!-- look_deeper.css might help -->
-    
-    <div class="animated-bg"></div>
-    
-    <main class="dark-container">
-        <div class="hidden-message">
-            You're getting closer...
-        </div>
-    </main>
-
-    <script src="script.js"></script>
-    <script>
-        // Stage 3 complete - award points
-        setTimeout(() => {
-            const participantCode = localStorage.getItem('participantCode');
-            if (participantCode) {
-                awardPoints(10, 'stage3_dark_corner');
-                console.log('%c🌑 Welcome to the dark corner. Inspect the HTML source carefully...', 'color: #9D4EDD; font-size: 14px;');
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>??? | Codeception 2025</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                background: #000000;
             }
-        }, 1000);
-
-        async function awardPoints(points, stage) {
-            const participantCode = localStorage.getItem('participantCode');
-            const participantEmail = localStorage.getItem('participantEmail');
-            
-            if (!participantCode || !participantEmail) return;
-
-            try {
-                await fetch('/api/award-points', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        participantCode, 
-                        email: participantEmail,
-                        points, 
-                        stage 
-                    })
-                });
-            } catch (error) {
-                console.error('Error awarding points:', error);
+            .dark-container {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0.05;
+                transition: opacity 0.5s;
             }
-        }
-    </script>
-</body>
+            .dark-container:hover {
+                opacity: 0.1;
+            }
+            .hidden-message {
+                font-size: 2rem;
+                color: #111;
+                font-family: 'Orbitron', sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- look_deeper.css might help -->
+
+        <div class="animated-bg"></div>
+
+        <main class="dark-container">
+            <div class="hidden-message">You're getting closer...</div>
+        </main>
+
+        <script src="script.js"></script>
+        <script>
+            // Stage 3 complete - award points
+            setTimeout(() => {
+                const participantCode = localStorage.getItem('participantCode');
+                if (participantCode) {
+                    awardPoints(10, 'stage3_dark_corner');
+                    console.log(
+                        '%c🌑 Welcome to the dark corner. Inspect the HTML source carefully...',
+                        'color: #9D4EDD; font-size: 14px;'
+                    );
+                }
+            }, 1000);
+
+            async function awardPoints(points, stage) {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+
+                if (!participantCode || !participantEmail) return;
+
+                try {
+                    await fetch('/api/award-points', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points,
+                            stage,
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error awarding points:', error);
+                }
+            }
+        </script>
+    </body>
 </html>

@@ -1,168 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Granted | Codeception 2025</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        .success-animation {
-            animation: successPulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes successPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .completion-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .stat-box {
-            background: rgba(0, 255, 255, 0.05);
-            border: 2px solid var(--accent-cyan);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-family: 'Orbitron', sans-serif;
-            color: var(--accent-cyan);
-            margin: 0.5rem 0;
-        }
-        
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="animated-bg"></div>
-    
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="glow-text">CODECEPTION</span>
-                <span class="year">2025</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="leaderboard.html">Leaderboard</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <main class="content-section">
-        <div class="container">
-            <div class="challenge-card success-animation">
-                <div class="scanning-line"></div>
-                
-                <div class="challenge-header" style="text-align: center; padding: 3rem 0;">
-                    <div class="terminal-icon" style="font-size: 4rem; margin-bottom: 1rem;">
-                        ✓
-                    </div>
-                    <h1 class="challenge-title glow-text" style="font-size: 3rem;">ACCESS GRANTED</h1>
-                    <h2 style="color: var(--success); margin-top: 1rem; font-size: 1.5rem;">
-                        CONGRATULATIONS, <span id="participantName">PARTICIPANT</span>
-                    </h2>
-                    <p style="color: var(--text-main); margin-top: 1rem; font-size: 1.2rem;">
-                        You've completed Codeception 2025
-                    </p>
-                </div>
-
-                <div class="completion-stats" id="completionStats">
-                    <div class="stat-box">
-                        <div class="stat-label">Total Points</div>
-                        <div class="stat-value" id="totalPoints">--</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Completion Time</div>
-                        <div class="stat-value" id="completionTime">--</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Your Rank</div>
-                        <div class="stat-value" id="participantRank">--</div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 3rem;">
-                    <p style="color: var(--text-muted); margin-bottom: 2rem;">
-                        You've successfully navigated through all the hidden layers and uncovered every secret. 
-                        Your journey through the digital labyrinth is complete!
-                    </p>
-                    
-                    <a href="leaderboard.html" class="btn btn-primary btn-large">
-                        <span>View Final Leaderboard</span>
-                        <div class="btn-glow"></div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="footer">
-        <p>&copy; 2025 Codeception. All rights reserved. | Powered by Code & Curiosity</p>
-    </footer>
-
-    <script src="script.js"></script>
-    <script>
-        // Mark completion and award final bonus points
-        async function markCompletion() {
-            const participantCode = localStorage.getItem('participantCode');
-            const participantEmail = localStorage.getItem('participantEmail');
-            const participantName = localStorage.getItem('participantName');
-            
-            if (!participantCode || !participantEmail) {
-                alert('Please log in to view your completion status');
-                window.location.href = '/puzzle.html';
-                return;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Access Granted | Codeception 2025</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            .success-animation {
+                animation: successPulse 2s ease-in-out infinite;
             }
 
-            // Display participant name
-            document.getElementById('participantName').textContent = participantName || 'PARTICIPANT';
-
-            try {
-                // Mark as completed and award bonus points
-                const response = await fetch('/api/complete-challenge', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        participantCode, 
-                        email: participantEmail
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    document.getElementById('totalPoints').textContent = data.totalPoints;
-                    document.getElementById('completionTime').textContent = data.completionTime || '--';
-                    document.getElementById('participantRank').textContent = data.rank || '--';
-                    
-                    // Trigger confetti or celebration effect
-                    celebrateCompletion();
+            @keyframes successPulse {
+                0%,
+                100% {
+                    transform: scale(1);
                 }
-            } catch (error) {
-                console.error('Error marking completion:', error);
+                50% {
+                    transform: scale(1.05);
+                }
             }
-        }
 
-        function celebrateCompletion() {
-            // Add celebration visual effects
-            console.log('%c🎉🎉🎉 CONGRATULATIONS! 🎉🎉🎉', 'color: #00FF9C; font-size: 24px; font-weight: bold;');
-            console.log('%cYou have successfully completed Codeception 2025!', 'color: #00FFFF; font-size: 16px;');
-        }
+            .completion-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+                margin: 2rem 0;
+            }
 
-        // Run on page load
-        markCompletion();
-    </script>
-</body>
+            .stat-box {
+                background: rgba(0, 255, 255, 0.05);
+                border: 2px solid var(--accent-cyan);
+                border-radius: 8px;
+                padding: 1.5rem;
+                text-align: center;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+                font-family: 'Orbitron', sans-serif;
+                color: var(--accent-cyan);
+                margin: 0.5rem 0;
+            }
+
+            .stat-label {
+                color: var(--text-muted);
+                font-size: 0.9rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="animated-bg"></div>
+
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="glow-text">CODECEPTION</span>
+                    <span class="year">2025</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content-section">
+            <div class="container">
+                <div class="challenge-card success-animation">
+                    <div class="scanning-line"></div>
+
+                    <div
+                        class="challenge-header"
+                        style="text-align: center; padding: 3rem 0"
+                    >
+                        <div
+                            class="terminal-icon"
+                            style="font-size: 4rem; margin-bottom: 1rem"
+                        >
+                            ✓
+                        </div>
+                        <h1
+                            class="challenge-title glow-text"
+                            style="font-size: 3rem"
+                        >
+                            ACCESS GRANTED
+                        </h1>
+                        <h2
+                            style="
+                                color: var(--success);
+                                margin-top: 1rem;
+                                font-size: 1.5rem;
+                            "
+                        >
+                            CONGRATULATIONS,
+                            <span id="participantName">PARTICIPANT</span>
+                        </h2>
+                        <p
+                            style="
+                                color: var(--text-main);
+                                margin-top: 1rem;
+                                font-size: 1.2rem;
+                            "
+                        >
+                            You've completed Codeception 2025
+                        </p>
+                    </div>
+
+                    <div class="completion-stats" id="completionStats">
+                        <div class="stat-box">
+                            <div class="stat-label">Total Points</div>
+                            <div class="stat-value" id="totalPoints">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Completion Time</div>
+                            <div class="stat-value" id="completionTime">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Your Rank</div>
+                            <div class="stat-value" id="participantRank">
+                                --
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 3rem">
+                        <p
+                            style="
+                                color: var(--text-muted);
+                                margin-bottom: 2rem;
+                            "
+                        >
+                            You've successfully navigated through all the hidden
+                            layers and uncovered every secret. Your journey
+                            through the digital labyrinth is complete!
+                        </p>
+
+                        <a
+                            href="leaderboard.html"
+                            class="btn btn-primary btn-large"
+                        >
+                            <span>View Final Leaderboard</span>
+                            <div class="btn-glow"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>
+                &copy; 2025 Codeception. All rights reserved. | Powered by Code
+                & Curiosity
+            </p>
+        </footer>
+
+        <script src="script.js"></script>
+        <script>
+            // Mark completion and award final bonus points
+            async function markCompletion() {
+                const participantCode = localStorage.getItem('participantCode');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
+                const participantName = localStorage.getItem('participantName');
+
+                if (!participantCode || !participantEmail) {
+                    alert('Please log in to view your completion status');
+                    window.location.href = '/puzzle.html';
+                    return;
+                }
+
+                // Display participant name
+                document.getElementById('participantName').textContent =
+                    participantName || 'PARTICIPANT';
+
+                try {
+                    // Mark as completed and award bonus points
+                    const response = await fetch('/api/complete-challenge', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        document.getElementById('totalPoints').textContent =
+                            data.totalPoints;
+                        document.getElementById('completionTime').textContent =
+                            data.completionTime || '--';
+                        document.getElementById('participantRank').textContent =
+                            data.rank || '--';
+
+                        // Trigger confetti or celebration effect
+                        celebrateCompletion();
+                    }
+                } catch (error) {
+                    console.error('Error marking completion:', error);
+                }
+            }
+
+            function celebrateCompletion() {
+                // Add celebration visual effects
+                console.log(
+                    '%c🎉🎉🎉 CONGRATULATIONS! 🎉🎉🎉',
+                    'color: #00FF9C; font-size: 24px; font-weight: bold;'
+                );
+                console.log(
+                    '%cYou have successfully completed Codeception 2025!',
+                    'color: #00FFFF; font-size: 16px;'
+                );
+            }
+
+            // Run on page load
+            markCompletion();
+        </script>
+    </body>
 </html>

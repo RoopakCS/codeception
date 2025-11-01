@@ -1,20 +1,14 @@
 # Codeception 2025 - Quick Start Guide 🚀# Quick Start Guide - Codeception 2025
 
-
-
 ## 🎯 Challenge Overview## 🚀 Get Started in 5 Minutes
 
+**Total Stages:** 10 ### Step 1: Install Dependencies
 
+**Total Points:** 150 points ```bash
 
-**Total Stages:** 10  ### Step 1: Install Dependencies
-
-**Total Points:** 150 points  ```bash
-
-**Estimated Time:** 2.5 - 3 hours  npm install
+**Estimated Time:** 2.5 - 3 hours npm install
 
 **Difficulty:** Progressive (Easy → Expert)```
-
-
 
 ---This will install:
 
@@ -26,7 +20,7 @@
 
 ### **Stage 1: HTML Comments** - dotenv (environment variables)
 
-📍 Location: `/index.html`  - nodemon (development auto-reload)
+📍 Location: `/index.html` - nodemon (development auto-reload)
 
 🎯 Points: 0 (Starting point)
 
@@ -46,7 +40,7 @@
 
 6. Navigate to `/decode-me`**Option B: MongoDB Atlas (Recommended)**
 
-1. Go to https://www.mongodb.com/cloud/atlas
+7. Go to https://www.mongodb.com/cloud/atlas
 
 ---2. Create a free account
 
@@ -54,7 +48,7 @@
 
 ### **Stage 2: Base64 Decoding**4. Create a database user (Database Access → Add New User)
 
-📍 Location: `/decode-me`  5. Whitelist your IP (Network Access → Add IP Address → Add Current IP)
+📍 Location: `/decode-me` 5. Whitelist your IP (Network Access → Add IP Address → Add Current IP)
 
 🎯 Points: 106. Get connection string (Connect → Connect your application)
 
@@ -62,7 +56,7 @@
 
 **Encrypted Message:**
 
-```### Step 3: Configure Environment
+````### Step 3: Configure Environment
 
 U29tZXRpbWVzIHRoZSBvYnZpb3VzIGlzIGhpZGRlbiBpbiBwbGFpbiBzaWdodA==```bash
 
@@ -78,7 +72,7 @@ cp .env.example .env
 
    atob('U29tZXRpbWVzIHRoZSBvYnZpb3VzIGlzIGhpZGRlbiBpbiBwbGFpbiBzaWdodA==')MONGODB_URI=mongodb://localhost:27017/codeception
 
-   ```
+````
 
 2. **Answer:** `Sometimes the obvious is hidden in plain sight`# For MongoDB Atlas:
 
@@ -114,23 +108,24 @@ npm start
 
 4. View Response:```
 
-   ```json
+    ````json
 
-   {## 📋 Testing the Application
+    {## 📋 Testing the Application
 
-     "next": "/the-dark-corner",
+      "next": "/the-dark-corner",
 
-     "hint": "The network tab holds the key..."### 1. Register a Team
+      "hint": "The network tab holds the key..."### 1. Register a Team
 
-   }1. Go to http://localhost:3000/register.html
+    }1. Go to http://localhost:3000/register.html
 
-   ```2. Fill in:
+    ```2. Fill in:
 
-5. +10 points awarded automatically   - Team Name: "Test Team"
+    ````
 
-6. Navigate to `/the-dark-corner`   - Email: "test@example.com"
+5. +10 points awarded automatically - Team Name: "Test Team"
 
-   - Member 1: "John Doe"
+6. Navigate to `/the-dark-corner` - Email: "test@example.com"
+    - Member 1: "John Doe"
 
 ---3. Click "Register Team"
 
@@ -138,7 +133,7 @@ npm start
 
 ### **Stage 4: Dark Corner CSS**
 
-📍 Location: `/the-dark-corner`  ### 2. View Leaderboard
+📍 Location: `/the-dark-corner` ### 2. View Leaderboard
 
 🎯 Points: 101. Go to http://localhost:3000/leaderboard.html
 
@@ -158,19 +153,17 @@ npm start
 
 6. Find `.clue` class with background URL:4. You'll see the mission control interface
 
-   ```css
+    ```css
 
-   background: url("/hidden/final?key=0x91f");## 🧪 Testing API Endpoints
+    background: url("/hidden/final?key=0x91f");## 🧪 Testing API Endpoints
 
-   ```
+    ```
 
 7. Navigate to `/hidden/final?key=0x91f`You can test the API using curl, Postman, or your browser:
 
-
-
 ---### Health Check
 
-```bash
+`````bash
 
 ### **Stage 5: Console Riddle**curl http://localhost:3000/api/health
 
@@ -513,24 +506,28 @@ use codeception
 ```javascript
 // In console
 atob('encoded_string')
-```
+`````
 
 ### For localStorage:
+
 ```javascript
 // View all
-localStorage
+localStorage;
 
 // Get specific key
-localStorage.getItem('key_name')
+localStorage.getItem('key_name');
 ```
 
 ### For Cookies:
+
 Application Tab → Cookies → http://localhost:3000
 
 ### For Network Headers:
+
 Network tab → Click request → Headers section
 
 ### For Performance:
+
 1. Open Performance tab
 2. Click Record (circle)
 3. Perform action
@@ -538,6 +535,7 @@ Network tab → Click request → Headers section
 5. Look for User Timing marks
 
 ### For Sources Debugging:
+
 1. Sources tab → navigate to file
 2. Click line number to set breakpoint
 3. Execute function in Console
@@ -549,13 +547,13 @@ Network tab → Click request → Headers section
 
 ```javascript
 // Console commands you'll need
-atob('...')                    // Decode base64
-localStorage.getItem('key')    // Get localStorage
-window.getNextStage()          // Stage 9 command
-help()                         // Stage 10 command
-revealClue()                   // Stage 10 command
-checkNetwork()                 // Stage 10 command
-getFinalKey()                  // Stage 10 command (sets breakpoint)
+atob('...'); // Decode base64
+localStorage.getItem('key'); // Get localStorage
+window.getNextStage(); // Stage 9 command
+help(); // Stage 10 command
+revealClue(); // Stage 10 command
+checkNetwork(); // Stage 10 command
+getFinalKey(); // Stage 10 command (sets breakpoint)
 ```
 
 ---
