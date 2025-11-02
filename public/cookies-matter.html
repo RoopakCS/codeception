@@ -25,7 +25,7 @@
                             <span class="code-bracket">&gt;</span>
                         </div>
                         <h1 class="challenge-title glow-text">
-                            STAGE 7: COOKIE JAR
+                            STAGE 6: COOKIE JAR
                         </h1>
                     </div>
 
@@ -69,7 +69,7 @@
         <script src="script.js"></script>
         <script>
             window.addEventListener('DOMContentLoaded', () => {
-                awardPoints(10, 'stage7_cookies');
+                awardPoints(15, 'stage6_cookies');
             });
 
             function bakeCookie() {
@@ -98,13 +98,13 @@
                 // Answer: performance_tab_awaits
                 if (input === 'performance_tab_awaits') {
                     result.innerHTML =
-                        '<div class="success-msg">✓ Perfect! Time to check Performance. Visit /performance-puzzle</div>';
+                        '<div class="success-msg">✓ Perfect! Moving to console wizardry challenge!</div>';
                     result.className = 'result-message success';
 
-                    awardPoints(10, 'stage7_cookie_found');
+                    awardPoints(15, 'stage6_cookie_found');
 
                     setTimeout(() => {
-                        window.location.href = '/performance-puzzle';
+                        window.location.href = '/console-wizardry';
                     }, 2500);
                 } else {
                     result.innerHTML =

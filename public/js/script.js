@@ -146,10 +146,16 @@ function initRegistrationForm() {
                 document.getElementById('registeredName').textContent =
                     result.name;
 
-                // Store participant info in localStorage (do NOT store password)
+                // Store participant info and auth token in localStorage (do NOT store password)
                 localStorage.setItem('participantCode', result.participantCode);
                 localStorage.setItem('participantEmail', formData.email);
                 localStorage.setItem('participantName', result.name);
+                localStorage.setItem('authToken', result.token);
+                
+                // Auto redirect to challenges after a short delay
+                setTimeout(() => {
+                    window.location.href = '/index.html';
+                }, 3000);
             } else {
                 // Show error message
                 document.getElementById('errorMessage').style.display = 'block';

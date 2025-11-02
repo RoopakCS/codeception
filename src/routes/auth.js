@@ -80,11 +80,28 @@ router.post('/register', async (req, res) => {
         });
         await newScore.save();
 
+        // Generate JWT token for auto-login
+        const token = jwt.sign(
+            {
+                id: newParticipant._id,
+                email: newParticipant.email,
+                participantCode: newParticipant.participantCode,
+            },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
         res.status(201).json({
             success: true,
             message: 'Registration successful',
             participantCode,
             name: newParticipant.name,
+            token,
+            participant: {
+                name: newParticipant.name,
+                email: newParticipant.email,
+                participantCode: newParticipant.participantCode,
+            }
         });
     } catch (error) {
         console.error('Registration error:', error);

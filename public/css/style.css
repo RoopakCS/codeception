@@ -154,7 +154,7 @@ a {
     text-decoration: none;
 }
 
-.nav-menu a::after {
+.nav-menu a:not(.user-avatar)::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -169,8 +169,8 @@ a {
     transition: width 0.3s ease;
 }
 
-.nav-menu a:hover::after,
-.nav-menu a.active::after {
+.nav-menu a:not(.user-avatar):hover::after,
+.nav-menu a:not(.user-avatar).active::after {
     width: 100%;
 }
 
@@ -185,6 +185,7 @@ a {
 }
 
 /* User Avatar */
+a .user-avatar,
 .user-avatar {
     width: 40px;
     height: 40px;
@@ -202,14 +203,21 @@ a {
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-decoration: none;
+    text-decoration: none !important;
     border: 2px solid transparent;
 }
 
+a:hover .user-avatar,
 .user-avatar:hover {
     transform: scale(1.05);
     border-color: var(--accent-cyan);
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    text-decoration: none !important;
+}
+
+/* Remove underline from avatar links */
+a[href*="participant.html"] {
+    text-decoration: none !important;
 }
 
 /* Hide register CTA when logged in */
