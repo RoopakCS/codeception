@@ -1797,6 +1797,22 @@ a[href*="participant.html"] {
     margin: 0.5rem 0;
 }
 
+.code-display {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent-cyan);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    font-family: 'Courier New', monospace;
+    color: var(--accent-cyan);
+}
+
+.code-display pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
 .riddle-text {
     color: var(--accent-purple);
     font-size: 1.1rem;

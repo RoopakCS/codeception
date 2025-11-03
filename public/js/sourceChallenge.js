@@ -25,7 +25,7 @@
         const participantEmail = localStorage.getItem('participantEmail');
 
         if (participantCode && participantEmail) {
-            fetch('/api/award-points', {
+            fetch('/api/challenges/award-points', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

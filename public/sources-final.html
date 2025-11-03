@@ -26,7 +26,7 @@
                             <span class="code-bracket">&gt;</span>
                         </div>
                         <h1 class="challenge-title glow-text">
-                            STAGE 10: SOURCES & DEBUGGER
+                            STAGE 8: SOURCES & DEBUGGER
                         </h1>
                     </div>
 
@@ -86,7 +86,7 @@ Instructions:
             </div>
         </main>
 
-        <script src="script.js"></script>
+        <script src="./js/script.js"></script>
         <script>
             window.addEventListener('DOMContentLoaded', () => {
                 awardPoints(10, 'stage10_sources');
@@ -133,7 +133,7 @@ Instructions:
                 if (!participantCode || !participantEmail) return;
 
                 try {
-                    await fetch('/api/award-points', {
+                    await fetch('/api/challenges/award-points', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

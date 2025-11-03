@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Decode Me | Codeception 2025</title>
+        <title>Decode Me | Codeception</title>
         <link rel="stylesheet" href="./css/style.css" />
         <link rel="stylesheet" href="./css/look_deeper.css" />
         <link
@@ -36,7 +36,7 @@
                             U29tZXRpbWVzIHRoZSBvYnZpb3VzIGlzIGhpZGRlbiBpbiBwbGFpbiBzaWdodA==
                         </div>
                         <p class="hint-text">
-                            💡 Base64 decoding might help...
+                            💡atob()
                         </p>
                     </div>
 
@@ -61,7 +61,7 @@
             </div>
         </main>
 
-        <script src="script.js"></script>
+        <script src="./js/script.js"></script>
         <script>
             function checkDecode() {
                 const input = document
@@ -97,8 +97,8 @@
 
             async function awardPoints(points, stage) {
                 const participantCode = localStorage.getItem('participantCode');
-                const participantEmail =
-                    localStorage.getItem('participantEmail');
+                const participantEmail = localStorage.getItem('participantEmail');
+                const authToken = localStorage.getItem('authToken');
 
                 if (!participantCode || !participantEmail) {
                     console.log('Please log in to earn points');
@@ -106,9 +106,12 @@
                 }
 
                 try {
-                    await fetch('/api/award-points', {
+                    const response = await fetch('/api/challenges/award-points', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
                         body: JSON.stringify({
                             participantCode,
                             email: participantEmail,
@@ -116,6 +119,28 @@
                             stage,
                         }),
                     });
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            // Token expired or invalid
+                            console.error('Authentication failed. Please log in again.');
+                            // Redirect to login
+                            window.location.href = '/login.html';
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Update local completed stages
+                        const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+                        if (!completedStages.includes(stage)) {
+                            completedStages.push(stage);
+                            localStorage.setItem('completedStages', JSON.stringify(completedStages));
+                        }
+                    }
                 } catch (error) {
                     console.error('Error awarding points:', error);
                 }

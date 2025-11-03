@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
         initDecodeStage();
     } else if (currentPage === 'the-dark-corner.html') {
         initDarkCornerStage();
-    } else if (currentPage === 'final-challenge.html') {
-        initFinalChallenge();
+    } else if (currentPage === 'color-riddle.html') {
+        initColorRiddle();
     }
 });
 
@@ -292,6 +292,8 @@ function updatePodium(scores) {
     });
 }
 
+const totalStages = 8; // Updated after removing performance puzzle stage
+
 function updateLeaderboardTable(scores) {
     const tbody = document.getElementById('leaderboardBody');
     if (!tbody) return;
@@ -320,6 +322,7 @@ function updateLeaderboardTable(scores) {
             <td>${rank}</td>
             <td>${displayName}</td>
             <td>${participant.score}</td>
+            <td>${participant.completedStages ? participant.completedStages.length : 0}/${totalStages}</td>
             <td>${timeTaken}</td>
             <td><span class="status-badge ${status}">${status}</span></td>
         `;
@@ -621,7 +624,7 @@ async function verifyAuthToken(token) {
     try {
         // Make an authenticated request to award-points endpoint
         // This will return 403 if token is invalid
-        const response = await fetch('/api/award-points', {
+        const response = await fetch('/api/challenges/award-points', {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -661,6 +664,205 @@ async function makeAuthenticatedRequest(url, options = {}) {
     }
 
     return response;
+}
+
+// ===== SCORE NOTIFICATION =====
+function showScoreNotification(points, totalScore) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'score-notification';
+    notification.innerHTML = `
+        <div class="score-popup">
+            <div class="score-icon">🎯</div>
+            <div class="score-text">
+                <p>+${points} points!</p>
+                <p class="total-score">Total: ${totalScore}</p>
+            </div>
+        </div>
+    `;
+
+    // Add styles if not already present
+    if (!document.getElementById('score-notification-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'score-notification-styles';
+        styles.textContent = `
+            .score-notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                animation: slideIn 0.5s ease-out;
+            }
+            .score-popup {
+                background: linear-gradient(45deg, #2C3E50, #3498db);
+                color: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .score-icon {
+                font-size: 24px;
+            }
+            .score-text {
+                margin: 0;
+            }
+            .score-text p {
+                margin: 0;
+                font-size: 16px;
+            }
+            .total-score {
+                font-size: 14px !important;
+                opacity: 0.9;
+            }
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+
+    // Add to document
+    document.body.appendChild(notification);
+
+    // Remove after animation
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.5s ease-in forwards';
+        setTimeout(() => {
+            notification.remove();
+        }, 500);
+    }, 3000);
+}
+
+// ===== DECODE STAGE =====
+function initDecodeStage() {
+    // Check if already completed
+    const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+    if (completedStages.includes('stage2_decode')) {
+        const result = document.getElementById('decodeResult');
+        if (result) {
+            result.innerHTML = '<div class="success-msg">✓ Stage already completed!</div>';
+            result.className = 'result-message success';
+        }
+    }
+
+    // Add enter key support for decode input
+    const decodeInput = document.getElementById('decodeInput');
+    if (decodeInput) {
+        decodeInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkDecode();
+            }
+        });
+    }
+}
+
+// ===== DARK CORNER STAGE =====
+function initDarkCornerStage() {
+    const authToken = localStorage.getItem('authToken');
+    const participantCode = localStorage.getItem('participantCode');
+    const participantEmail = localStorage.getItem('participantEmail');
+
+    // Check auth first
+    if (!authToken || !participantCode || !participantEmail) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    // Check if already completed
+    const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+    if (completedStages.includes('stage3_dark_corner')) {
+        console.log(
+            '%c🌑 You have already conquered the darkness...',
+            'color: #9D4EDD; font-size: 14px;'
+        );
+    }
+}
+
+// ===== COLOR RIDDLE STAGE =====
+function initColorRiddle() {
+    const authToken = localStorage.getItem('authToken');
+    const participantCode = localStorage.getItem('participantCode');
+    const participantEmail = localStorage.getItem('participantEmail');
+
+    // Check auth first
+    if (!authToken || !participantCode || !participantEmail) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    // Check if already completed
+    const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+    if (completedStages.includes('stage4_color_riddle')) {
+        const result = document.getElementById('finalResult');
+        if (result) {
+            result.innerHTML = '<div class="success-msg">✓ Stage already completed!</div>';
+            result.className = 'result-message success';
+        }
+    }
+
+    // Add enter key support
+    const answerInput = document.getElementById('finalAnswer');
+    if (answerInput) {
+        answerInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkFinalAnswer();
+            }
+        });
+    }
+}
+
+// ===== CUSTOM ENCODING UTILITIES =====
+function rotateChar(char, shift) {
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    const isUpperCase = char === char.toUpperCase();
+    char = char.toLowerCase();
+    
+    if (alphabet.includes(char)) {
+        let index = alphabet.indexOf(char);
+        index = (index + shift) % 26;
+        if (index < 0) index += 26;
+        char = alphabet[index];
+        return isUpperCase ? char.toUpperCase() : char;
+    }
+    return char;
+}
+
+function xorString(str, key) {
+    let result = '';
+    for(let i = 0; i < str.length; i++) {
+        result += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    }
+    return result;
+}
+
+function customEncode(text) {
+    // First convert to base64
+    const base64 = btoa(text);
+    // Then encode to ROT13
+    return base64.split('').map(char => rotateChar(char, 13)).join('');
+}
+
+function customDecode(text) {
+    try {
+        // First decode ROT13
+        const rot13decoded = text.split('').map(char => rotateChar(char, -13)).join('');
+        // Then decode base64
+        return atob(rot13decoded);
+    } catch (e) {
+        return '';
+    }
 }
 
 // ===== FORM VALIDATION ENHANCEMENTS =====

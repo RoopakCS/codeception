@@ -3,13 +3,13 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Final Challenge | Codeception 2025</title>
+        <title>Color Riddle | Codeception 2025</title>
         <link rel="stylesheet" href="./css/style.css" />
         <link
             href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
             rel="stylesheet"
         />
-        <script src="./js/decodeFinal.js"></script>
+        <script src="./js/colorRiddle.js"></script>
     </head>
     <body>
         <div class="animated-bg"></div>
@@ -25,7 +25,7 @@
                             <span>/</span>
                             <span class="code-bracket">&gt;</span>
                         </div>
-                        <h1 class="challenge-title glow-text">FINAL STAGE</h1>
+                        <h1 class="challenge-title glow-text">STAGE 4: COLOR RIDDLE</h1>
                     </div>
 
                     <div class="scrambled-section">
@@ -71,49 +71,45 @@
             </div>
         </main>
 
-        <script src="script.js"></script>
+        <script src="./js/script.js"></script>
         <script>
             function checkFinalAnswer() {
                 const input = document
                     .getElementById('finalAnswer')
-                    .value.trim()
-                    .toLowerCase();
+                    .value.trim();
                 const result = document.getElementById('finalResult');
 
                 // Accept various color formats for cyan
                 const validAnswers = [
-                    'cyan',
-                    '#00ffff',
-                    '00ffff',
-                    '#0ff',
-                    '0ff',
-                    'rgb(0,255,255)',
-                    'rgb(0, 255, 255)',
-                    'aqua',
-                    'turquoise',
-                    'blue',
+                    '#00DBFF',
+                    '#00dbff',
+                    '00DBFF',
+                    '00dbff'
                 ];
 
-                if (validAnswers.includes(input.replace(/\s+/g, ''))) {
+                if (validAnswers.includes(input)) {
                     result.innerHTML =
-                        '<div class="success-msg">🎉 CORRECT! But wait... there\'s more. Check localStorage...</div>';
+                        '<div class="success-msg">🎉 CORRECT! But wait... there\'s more. Check the console...</div>';
                     result.className = 'result-message success';
 
-                    // Store a clue in localStorage
-                    localStorage.setItem(
-                        'stage5_key',
-                        'Y0dKaGRtVnRZWE4wWlhJPQ=='
-                    );
+                    // Award points and trigger next stage
+                    awardPoints();
 
-                    // Award final points
-                    awardFinalPoints();
+                    // Make a special network request that contains the next clue
+                    fetch('/api/vault-unlock', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Vault-Key': 'WjI4Z2RHOGdMMmR5WVhabGJXRnpkR1Z5'
+                        }
+                    });
 
                     setTimeout(() => {
                         console.log(
-                            '%c🔐 Stage 5 unlocked! Decode the key in localStorage: stage5_key',
+                            '%c🔐 Great work! navigate to gravemaster',
                             'color: #9D4EDD; font-size: 14px; font-weight: bold;'
                         );
-                    }, 2000);
+                    }, 0);
                 } else {
                     result.innerHTML =
                         '<div class="error-msg">✗ Incorrect. Think about the main accent colors of this website...</div>';
@@ -121,24 +117,60 @@
                 }
             }
 
-            async function awardFinalPoints() {
+            async function awardPoints() {
                 const participantCode = localStorage.getItem('participantCode');
-                const participantEmail =
-                    localStorage.getItem('participantEmail');
+                const participantEmail = localStorage.getItem('participantEmail');
+                const authToken = localStorage.getItem('authToken');
 
-                if (!participantCode || !participantEmail) return;
+                if (!participantCode || !participantEmail || !authToken) return;
 
                 try {
-                    await fetch('/api/award-points', {
+                    const response = await fetch('/api/challenges/award-points', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
                         body: JSON.stringify({
                             participantCode,
                             email: participantEmail,
                             points: 10,
-                            stage: 'stage4_final_challenge',
+                            stage: 'stage4_color_riddle',
                         }),
                     });
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            console.log('Session expired. Please log in again.');
+                            window.location.href = '/login.html';
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success && !result.alreadyCompleted) {
+                        // Show score notification if available
+                        if (typeof showScoreNotification === 'function') {
+                            showScoreNotification(10, result.totalScore);
+                        }
+                        
+                        // Update completed stages in localStorage
+                        const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+                        if (!completedStages.includes('stage4_color_riddle')) {
+                            completedStages.push('stage4_color_riddle');
+                            localStorage.setItem('completedStages', JSON.stringify(completedStages));
+                        }
+
+                        // Provide link to next stage
+                        setTimeout(() => {
+                            const nextStage = document.getElementById('finalResult');
+                            if (nextStage) {
+                                nextStage.innerHTML += '<div class="success-msg mt-2">🎯 Next stage awaits at: /gravemaster.html</div>';
+                            }
+                        }, 1500);
+                    }
                 } catch (error) {
                     console.error('Error awarding points:', error);
                 }

@@ -33,7 +33,7 @@
         </style>
     </head>
     <body>
-        <!-- look_deeper.css might help -->
+        <!-- clue class in look_deeper.css might help -->
 
         <div class="animated-bg"></div>
 
@@ -41,42 +41,76 @@
             <div class="hidden-message">See the console</div>
         </main>
 
-        <script src="script.js"></script>
+        <script src="./js/script.js"></script>
+        <script src="./js/points.js"></script>
         <script>
             // Stage 3 complete - award points
-            setTimeout(() => {
+            setTimeout(async () => {
                 const participantCode = localStorage.getItem('participantCode');
-                if (participantCode) {
-                    awardPoints(10, 'stage3_dark_corner');
-                    console.log(
-                        '%c🌑 Welcome to the dark corner. Inspect the HTML source carefully...',
-                        'color: #9D4EDD; font-size: 14px;'
-                    );
+                const participantEmail = localStorage.getItem('participantEmail');
+                const authToken = localStorage.getItem('authToken');
+
+                if (!participantCode || !participantEmail || !authToken) {
+                    console.log('Please log in to earn points');
+                    window.location.href = '/login.html';
+                    return;
                 }
-            }, 1000);
-
-            async function awardPoints(points, stage) {
-                const participantCode = localStorage.getItem('participantCode');
-                const participantEmail =
-                    localStorage.getItem('participantEmail');
-
-                if (!participantCode || !participantEmail) return;
 
                 try {
-                    await fetch('/api/award-points', {
+                    const response = await fetch('/api/challenges/award-points', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
                         body: JSON.stringify({
                             participantCode,
                             email: participantEmail,
-                            points,
-                            stage,
+                            points: 10,
+                            stage: 'stage3_dark_corner',
                         }),
                     });
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            // Token expired or invalid
+                            console.log('Session expired. Please log in again.');
+                            window.location.href = '/login.html';
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success && !result.alreadyCompleted) {
+                        // Show score notification if points.js is loaded
+                        if (typeof showScoreNotification === 'function') {
+                            showScoreNotification(10, result.totalScore);
+                        }
+                        
+                        // Update stages tracking
+                        try {
+                            const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+                            if (!completedStages.includes('stage3_dark_corner')) {
+                                completedStages.push('stage3_dark_corner');
+                                localStorage.setItem('completedStages', JSON.stringify(completedStages));
+
+                                console.log(
+                                    '%c🌑 Welcome to the dark corner. Inspect the HTML source carefully...',
+                                    'color: #9D4EDD; font-size: 14px;'
+                                );
+                            }
+                        } catch (storageError) {
+                            console.error('Error updating local storage:', storageError);
+                            // Clear potentially corrupted data
+                            localStorage.setItem('completedStages', '[]');
+                        }
+                    }
                 } catch (error) {
                     console.error('Error awarding points:', error);
                 }
-            }
+            }, 1000);
         </script>
     </body>
 </html>

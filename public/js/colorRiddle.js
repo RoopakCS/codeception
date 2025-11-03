@@ -28,7 +28,7 @@
         );
         console.log('');
         console.log(
-            '%c💡 Hint: Look at the theme of this website...',
+            '%c💡 Hint: Color code of something in this website',
             'color: #9D4EDD; font-size: 12px;'
         );
         console.log('');
@@ -47,9 +47,19 @@
         if (!participantCode || !participantEmail) return;
 
         try {
-            await fetch('/api/award-points', {
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                console.log('Session expired. Please log in again.');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            await fetch('/api/challenges/award-points', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
                 body: JSON.stringify({
                     participantCode,
                     email: participantEmail,

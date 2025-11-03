@@ -23,3 +23,22 @@
 .network-hint {
     /* Check the Network tab when you visit /api/getHint?stage=2 */
 }
+
+@keyframes vault-security {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+}
+
+/* 
+   Security System Entry Point
+   Key validation sequence:
+   [CLASSIFIED-2025]
+   Encoded vault content:
+   681b091a09000a1c15001a150214 
+*/
+
+/* Key: Check the animation above for secrets */
+.secure-vault {
+    animation: vault-security 2s infinite;
+    content: 'Nice try, but the key is hidden deeper...';
+}

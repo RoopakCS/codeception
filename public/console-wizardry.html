@@ -79,7 +79,7 @@ Try typing in console:
             </div>
         </main>
 
-        <script src="script.js"></script>
+        <script src="./js/script.js"></script>
         <script>
             // Hidden challenge data in window object
             window.challengeData = {
@@ -188,7 +188,7 @@ Try typing in console:
                 if (!participantCode || !participantEmail) return;
 
                 try {
-                    await fetch('/api/award-points', {
+                    await fetch('/api/challenges/award-points', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
