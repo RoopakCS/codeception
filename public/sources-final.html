@@ -26,7 +26,7 @@
                             <span class="code-bracket">&gt;</span>
                         </div>
                         <h1 class="challenge-title glow-text">
-                            STAGE 8: SOURCES & DEBUGGER
+                            STAGE 9: SOURCES & DEBUGGER
                         </h1>
                     </div>
 
@@ -122,20 +122,41 @@ Instructions:
                 const participantCode = localStorage.getItem('participantCode');
                 const participantEmail =
                     localStorage.getItem('participantEmail');
+                const authToken = localStorage.getItem('authToken');
 
-                if (!participantCode || !participantEmail) return;
+                if (!participantCode || !participantEmail || !authToken) return;
 
                 try {
-                    await fetch('/api/challenges/award-points', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            participantCode,
-                            email: participantEmail,
-                            points,
-                            stage,
-                        }),
-                    });
+                    const response = await fetch(
+                        '/api/challenges/award-points',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                            body: JSON.stringify({
+                                participantCode,
+                                email: participantEmail,
+                                points,
+                                stage,
+                            }),
+                        }
+                    );
+
+                    if (!response.ok) {
+                        if (
+                            response.status === 401 ||
+                            response.status === 403
+                        ) {
+                            console.log(
+                                'Session expired. Please log in again.'
+                            );
+                            localStorage.clear();
+                            window.location.href = '/login.html';
+                            return;
+                        }
+                    }
                 } catch (error) {
                     console.error('Error awarding points:', error);
                 }

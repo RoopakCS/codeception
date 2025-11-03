@@ -80,7 +80,7 @@ app.post('/api/vault-unlock', (req, res) => {
     // Send response with the key in headers
     res.setHeader(
         'X-Vault-Key',
-        vaultKey || 'WjI4Z2RHOGdMMmR5WVhabGJXRnpkR1Z5'
+        vaultKey || 'o3cGZz5XpKIkIRu0pID4qT96FGOkZwyfozjkM0kYDGOAF1L='
     );
     res.setHeader('X-Vault-Status', 'ACTIVE');
     res.setHeader('X-Vault-Level', '5');
@@ -92,7 +92,10 @@ app.post('/api/vault-unlock', (req, res) => {
 
 // GET endpoint for vault status
 app.get('/api/vault-unlock', (req, res) => {
-    res.setHeader('X-Vault-Key', 'WjI4Z2RHOGdMMmR5WVhabGJXRnpkR1Z5');
+    res.setHeader(
+        'X-Vault-Key',
+        'o3cGZz5XpKIkIRu0pID4qT96FGOkZwyfozjkM0kYDGOAF1L='
+    );
     res.setHeader('X-Vault-Status', 'ACTIVE');
     res.setHeader('X-Vault-Level', '5');
     res.json({

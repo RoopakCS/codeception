@@ -6,7 +6,7 @@
         <title>Network Master | Codeception 2025</title>
         <link rel="stylesheet" href="./css/style.css" />
         <link
-            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wfamily=Poppins:wght@300;400;600&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
             rel="stylesheet"
         />
     </head>
@@ -116,20 +116,41 @@
                 const participantCode = localStorage.getItem('participantCode');
                 const participantEmail =
                     localStorage.getItem('participantEmail');
+                const authToken = localStorage.getItem('authToken');
 
-                if (!participantCode || !participantEmail) return;
+                if (!participantCode || !participantEmail || !authToken) return;
 
                 try {
-                    await fetch('/api/challenges/award-points', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            participantCode,
-                            email: participantEmail,
-                            points,
-                            stage,
-                        }),
-                    });
+                    const response = await fetch(
+                        '/api/challenges/award-points',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                            body: JSON.stringify({
+                                participantCode,
+                                email: participantEmail,
+                                points,
+                                stage,
+                            }),
+                        }
+                    );
+
+                    if (!response.ok) {
+                        if (
+                            response.status === 401 ||
+                            response.status === 403
+                        ) {
+                            console.log(
+                                'Session expired. Please log in again.'
+                            );
+                            localStorage.clear();
+                            window.location.href = '/login.html';
+                            return;
+                        }
+                    }
                 } catch (error) {
                     console.error('Error awarding points:', error);
                 }

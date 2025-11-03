@@ -76,11 +76,18 @@
                     );
 
                     if (!response.ok) {
-                        if (response.status === 401) {
-                            // Token expired or invalid
+                        if (
+                            response.status === 401 ||
+                            response.status === 403
+                        ) {
+                            // Token expired or invalid - clear storage and redirect
                             console.log(
                                 'Session expired. Please log in again.'
                             );
+                            localStorage.removeItem('authToken');
+                            localStorage.removeItem('participantCode');
+                            localStorage.removeItem('participantEmail');
+                            localStorage.removeItem('participantName');
                             window.location.href = '/login.html';
                             return;
                         }

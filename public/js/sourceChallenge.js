@@ -23,22 +23,32 @@
     setTimeout(() => {
         const participantCode = localStorage.getItem('participantCode');
         const participantEmail = localStorage.getItem('participantEmail');
+        const authToken = localStorage.getItem('authToken');
 
-        if (participantCode && participantEmail) {
+        if (participantCode && participantEmail && authToken) {
             fetch('/api/challenges/award-points', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`,
+                },
                 body: JSON.stringify({
                     participantCode,
                     email: participantEmail,
                     points: 10,
                     stage: 'stage10_source_file',
                 }),
-            }).then(() => {
-                console.log(
-                    '%c+10 points for finding sourceChallenge.js!',
-                    'color: #00FF9C; font-size: 14px;'
-                );
+            }).then((response) => {
+                if (response.ok) {
+                    console.log(
+                        '%c+10 points for finding sourceChallenge.js!',
+                        'color: #00FF9C; font-size: 14px;'
+                    );
+                } else if (response.status === 401 || response.status === 403) {
+                    console.log('Session expired. Please log in again.');
+                    localStorage.clear();
+                    window.location.href = '/login.html';
+                }
             });
         }
     }, 1000);

@@ -166,10 +166,11 @@
                 const participantEmail =
                     localStorage.getItem('participantEmail');
                 const participantName = localStorage.getItem('participantName');
+                const authToken = localStorage.getItem('authToken');
 
-                if (!participantCode || !participantEmail) {
+                if (!participantCode || !participantEmail || !authToken) {
                     alert('Please log in to view your completion status');
-                    window.location.href = '/puzzle.html';
+                    window.location.href = '/login.html';
                     return;
                 }
 
@@ -179,14 +180,37 @@
 
                 try {
                     // Mark as completed and award bonus points
-                    const response = await fetch('/api/complete-challenge', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            participantCode,
-                            email: participantEmail,
-                        }),
-                    });
+                    const response = await fetch(
+                        '/api/challenges/complete-challenge',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                            body: JSON.stringify({
+                                participantCode,
+                                email: participantEmail,
+                            }),
+                        }
+                    );
+
+                    if (!response.ok) {
+                        if (
+                            response.status === 401 ||
+                            response.status === 403
+                        ) {
+                            console.log(
+                                'Session expired. Please log in again.'
+                            );
+                            localStorage.clear();
+                            window.location.href = '/login.html';
+                            return;
+                        }
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`
+                        );
+                    }
 
                     const data = await response.json();
 

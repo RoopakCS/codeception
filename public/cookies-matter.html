@@ -98,7 +98,7 @@
                 // Answer: performance_tab_awaits
                 if (input === 'performance_tab_awaits') {
                     result.innerHTML =
-                        '<div class="success-msg">Perfect! Navigate to wizardry-challenge</div>';
+                        '<div class="success-msg">Perfect! Navigate to console-wizardry</div>';
                     result.className = 'result-message success';
 
                     awardPoints(15, 'stage7_cookie_found');
@@ -113,20 +113,41 @@
                 const participantCode = localStorage.getItem('participantCode');
                 const participantEmail =
                     localStorage.getItem('participantEmail');
+                const authToken = localStorage.getItem('authToken');
 
-                if (!participantCode || !participantEmail) return;
+                if (!participantCode || !participantEmail || !authToken) return;
 
                 try {
-                    await fetch('/api/challenges/award-points', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            participantCode,
-                            email: participantEmail,
-                            points,
-                            stage,
-                        }),
-                    });
+                    const response = await fetch(
+                        '/api/challenges/award-points',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                            body: JSON.stringify({
+                                participantCode,
+                                email: participantEmail,
+                                points,
+                                stage,
+                            }),
+                        }
+                    );
+
+                    if (!response.ok) {
+                        if (
+                            response.status === 401 ||
+                            response.status === 403
+                        ) {
+                            console.log(
+                                'Session expired. Please log in again.'
+                            );
+                            localStorage.clear();
+                            window.location.href = '/login.html';
+                            return;
+                        }
+                    }
                 } catch (error) {
                     console.error('Error awarding points:', error);
                 }
