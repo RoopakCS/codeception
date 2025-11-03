@@ -292,7 +292,7 @@ function updatePodium(scores) {
     });
 }
 
-const totalStages = 8; // Updated after removing performance puzzle stage
+const totalStages = 10; // Total number of challenge stages
 
 function updateLeaderboardTable(scores) {
     const tbody = document.getElementById('leaderboardBody');
@@ -400,11 +400,15 @@ async function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    const errorDiv = document.getElementById('loginError');
+    const errorDiv = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
     const loadingSpinner = document.getElementById('loadingSpinner');
+    const loginForm = document.getElementById('loginForm');
 
     try {
         if (loadingSpinner) loadingSpinner.style.display = 'block';
+        if (loginForm) loginForm.style.display = 'none';
+        if (errorDiv) errorDiv.style.display = 'none';
 
         const response = await fetch('/api/login', {
             method: 'POST',
@@ -430,28 +434,37 @@ async function handleLogin(e) {
             updateNavigation();
             window.location.href = '/index.html';
         } else {
-            if (errorDiv) {
-                errorDiv.textContent =
-                    result.message || 'Login failed. Please try again.';
+            // Hide loading and show form again
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+            if (loginForm) loginForm.style.display = 'block';
+            
+            // Show error message
+            if (errorDiv && errorText) {
+                errorText.textContent =
+                    result.message || 'Invalid email or password. Please try again.';
                 errorDiv.style.display = 'block';
 
                 setTimeout(() => {
                     errorDiv.style.display = 'none';
-                }, 3000);
+                }, 5000);
             }
         }
     } catch (error) {
         console.error('Login error:', error);
-        if (errorDiv) {
-            errorDiv.textContent = 'Network error. Please try again.';
+        
+        // Hide loading and show form again
+        if (loadingSpinner) loadingSpinner.style.display = 'none';
+        if (loginForm) loginForm.style.display = 'block';
+        
+        // Show error message
+        if (errorDiv && errorText) {
+            errorText.textContent = 'Network error. Please check your connection and try again.';
             errorDiv.style.display = 'block';
 
             setTimeout(() => {
                 errorDiv.style.display = 'none';
-            }, 3000);
+            }, 5000);
         }
-    } finally {
-        if (loadingSpinner) loadingSpinner.style.display = 'none';
     }
 }
 

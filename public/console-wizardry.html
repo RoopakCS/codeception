@@ -86,7 +86,7 @@
             };
 
             window.addEventListener('DOMContentLoaded', () => {
-                awardPoints(15, 'stage8_console');
+                awardPoints(10, 'stage9_console');
 
                 setTimeout(() => {
                     console.log(
@@ -109,8 +109,6 @@
                         '<div class="success-msg">Excellent! See the console</div>';
                     console.log('Final stage awaits at /sources-final');
                     result.className = 'result-message success';
-
-                    awardPoints(15, 'stage8_console_found');
                 } else {
                     result.innerHTML =
                         '<div class="error-msg">✗ Explore window.challengeData in console</div>';
@@ -155,6 +153,15 @@
                             localStorage.clear();
                             window.location.href = '/login.html';
                             return;
+                        }
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success && !result.alreadyCompleted) {
+                        // Show score notification
+                        if (typeof showScoreNotification === 'function') {
+                            showScoreNotification(result.pointsAdded || points, result.totalScore);
                         }
                     }
                 } catch (error) {

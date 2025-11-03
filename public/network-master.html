@@ -69,7 +69,7 @@
         <script src="./js/script.js"></script>
         <script>
             window.addEventListener('DOMContentLoaded', () => {
-                awardPoints(15, 'stage5_network');
+                awardPoints(10, 'stage7_network');
             });
 
             async function triggerNetworkCall() {
@@ -103,8 +103,6 @@
                     result.innerHTML =
                         '<div class="success-msg">Excellent! Navigate to that path...</div>';
                     result.className = 'result-message success';
-
-                    awardPoints(15, 'stage6_headers');
                 } else {
                     result.innerHTML =
                         '<div class="error-msg">✗ Check the Response Headers in Network tab!</div>';
@@ -149,6 +147,15 @@
                             localStorage.clear();
                             window.location.href = '/login.html';
                             return;
+                        }
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success && !result.alreadyCompleted) {
+                        // Show score notification
+                        if (typeof showScoreNotification === 'function') {
+                            showScoreNotification(result.pointsAdded || points, result.totalScore);
                         }
                     }
                 } catch (error) {

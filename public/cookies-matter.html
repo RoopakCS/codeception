@@ -69,7 +69,7 @@
         <script src="./js/script.js"></script>
         <script>
             window.addEventListener('DOMContentLoaded', () => {
-                awardPoints(15, 'stage6_cookies');
+                awardPoints(10, 'stage8_cookies');
             });
 
             function bakeCookie() {
@@ -98,10 +98,8 @@
                 // Answer: performance_tab_awaits
                 if (input === 'performance_tab_awaits') {
                     result.innerHTML =
-                        '<div class="success-msg">Perfect! Navigate to console-wizardry</div>';
+                        '<div class="success-msg">Perfect! Navigate to wizardry-challenge</div>';
                     result.className = 'result-message success';
-
-                    awardPoints(15, 'stage7_cookie_found');
                 } else {
                     result.innerHTML =
                         '<div class="error-msg">✗ Look in Application tab → Cookies</div>';
@@ -146,6 +144,15 @@
                             localStorage.clear();
                             window.location.href = '/login.html';
                             return;
+                        }
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success && !result.alreadyCompleted) {
+                        // Show score notification
+                        if (typeof showScoreNotification === 'function') {
+                            showScoreNotification(result.pointsAdded || points, result.totalScore);
                         }
                     }
                 } catch (error) {

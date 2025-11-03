@@ -199,7 +199,7 @@ router.post('/complete-challenge', authenticateToken, async (req, res) => {
         }
 
         if (scoreDoc.status !== 'completed') {
-            scoreDoc.score += 50;
+            // No bonus points - 10 stages × 10 points = 100 total
             scoreDoc.status = 'completed';
             scoreDoc.completionTime = new Date();
 

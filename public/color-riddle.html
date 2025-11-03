@@ -132,16 +132,14 @@
                                 'Content-Type': 'application/json',
                                 Authorization: `Bearer ${authToken}`,
                             },
-                            body: JSON.stringify({
-                                participantCode,
-                                email: participantEmail,
-                                points: 10,
-                                stage: 'stage4_color_riddle',
-                            }),
-                        }
-                    );
-
-                    if (!response.ok) {
+                        body: JSON.stringify({
+                            participantCode,
+                            email: participantEmail,
+                            points: 10,
+                            stage: 'stage5_color_riddle',
+                        }),
+                    }
+                );                    if (!response.ok) {
                         if (response.status === 401) {
                             console.log(
                                 'Session expired. Please log in again.'
@@ -166,8 +164,8 @@
                         const completedStages = JSON.parse(
                             localStorage.getItem('completedStages') || '[]'
                         );
-                        if (!completedStages.includes('stage4_color_riddle')) {
-                            completedStages.push('stage4_color_riddle');
+                        if (!completedStages.includes('stage5_color_riddle')) {
+                            completedStages.push('stage5_color_riddle');
                             localStorage.setItem(
                                 'completedStages',
                                 JSON.stringify(completedStages)
@@ -180,7 +178,7 @@
                                 document.getElementById('finalResult');
                             if (nextStage) {
                                 nextStage.innerHTML +=
-                                    '<div class="success-msg mt-2">🎯 Next stage awaits at: /gravemaster.html</div>';
+                                    '<div class="success-msg mt-2">Great! See the console</div>';
                             }
                         }, 1500);
                     }

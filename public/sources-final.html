@@ -106,8 +106,6 @@ Instructions:
                         '<div class="success-msg">🎉 PERFECT! You\'ve mastered DevTools! Redirecting to completion...</div>';
                     result.className = 'result-message success';
 
-                    awardPoints(10, 'stage8_debugger_found');
-
                     setTimeout(() => {
                         window.location.href = '/final-access.html';
                     }, 3000);
@@ -155,6 +153,15 @@ Instructions:
                             localStorage.clear();
                             window.location.href = '/login.html';
                             return;
+                        }
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success && !result.alreadyCompleted) {
+                        // Show score notification
+                        if (typeof showScoreNotification === 'function') {
+                            showScoreNotification(result.pointsAdded || points, result.totalScore);
                         }
                     }
                 } catch (error) {
