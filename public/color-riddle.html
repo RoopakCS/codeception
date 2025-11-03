@@ -25,7 +25,9 @@
                             <span>/</span>
                             <span class="code-bracket">&gt;</span>
                         </div>
-                        <h1 class="challenge-title glow-text">STAGE 4: COLOR RIDDLE</h1>
+                        <h1 class="challenge-title glow-text">
+                            STAGE 4: COLOR RIDDLE
+                        </h1>
                     </div>
 
                     <div class="scrambled-section">
@@ -80,12 +82,7 @@
                 const result = document.getElementById('finalResult');
 
                 // Accept various color formats for cyan
-                const validAnswers = [
-                    '#00DBFF',
-                    '#00dbff',
-                    '00DBFF',
-                    '00dbff'
-                ];
+                const validAnswers = ['#00DBFF', '#00dbff', '00DBFF', '00dbff'];
 
                 if (validAnswers.includes(input)) {
                     result.innerHTML =
@@ -100,13 +97,13 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-Vault-Key': 'WjI4Z2RHOGdMMmR5WVhabGJXRnpkR1Z5'
-                        }
+                            'X-Vault-Key': 'WjI4Z2RHOGdMMmR5WVhabGJXRnpkR1Z5',
+                        },
                     });
 
                     setTimeout(() => {
                         console.log(
-                            '%c🔐 Great work! navigate to gravemaster',
+                            '%c🔐 Great work! navigate to vault-secrets',
                             'color: #9D4EDD; font-size: 14px; font-weight: bold;'
                         );
                     }, 0);
@@ -119,55 +116,70 @@
 
             async function awardPoints() {
                 const participantCode = localStorage.getItem('participantCode');
-                const participantEmail = localStorage.getItem('participantEmail');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
                 const authToken = localStorage.getItem('authToken');
 
                 if (!participantCode || !participantEmail || !authToken) return;
 
                 try {
-                    const response = await fetch('/api/challenges/award-points', {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${authToken}`
-                        },
-                        body: JSON.stringify({
-                            participantCode,
-                            email: participantEmail,
-                            points: 10,
-                            stage: 'stage4_color_riddle',
-                        }),
-                    });
+                    const response = await fetch(
+                        '/api/challenges/award-points',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                            body: JSON.stringify({
+                                participantCode,
+                                email: participantEmail,
+                                points: 10,
+                                stage: 'stage4_color_riddle',
+                            }),
+                        }
+                    );
 
                     if (!response.ok) {
                         if (response.status === 401) {
-                            console.log('Session expired. Please log in again.');
+                            console.log(
+                                'Session expired. Please log in again.'
+                            );
                             window.location.href = '/login.html';
                             return;
                         }
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`
+                        );
                     }
 
                     const result = await response.json();
-                    
+
                     if (result.success && !result.alreadyCompleted) {
                         // Show score notification if available
                         if (typeof showScoreNotification === 'function') {
                             showScoreNotification(10, result.totalScore);
                         }
-                        
+
                         // Update completed stages in localStorage
-                        const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+                        const completedStages = JSON.parse(
+                            localStorage.getItem('completedStages') || '[]'
+                        );
                         if (!completedStages.includes('stage4_color_riddle')) {
                             completedStages.push('stage4_color_riddle');
-                            localStorage.setItem('completedStages', JSON.stringify(completedStages));
+                            localStorage.setItem(
+                                'completedStages',
+                                JSON.stringify(completedStages)
+                            );
                         }
 
                         // Provide link to next stage
                         setTimeout(() => {
-                            const nextStage = document.getElementById('finalResult');
+                            const nextStage =
+                                document.getElementById('finalResult');
                             if (nextStage) {
-                                nextStage.innerHTML += '<div class="success-msg mt-2">🎯 Next stage awaits at: /gravemaster.html</div>';
+                                nextStage.innerHTML +=
+                                    '<div class="success-msg mt-2">🎯 Next stage awaits at: /gravemaster.html</div>';
                             }
                         }, 1500);
                     }

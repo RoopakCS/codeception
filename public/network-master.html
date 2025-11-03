@@ -84,7 +84,7 @@
 
                     const data = await response.json();
                     document.getElementById('networkHint').innerHTML =
-                        `<div class="success-msg">✓ Request sent! Check Network tab → Headers → Response Headers</div>`;
+                        `<div class="success-msg">Request sent! Check response in network tab</div>`;
 
                     console.log('Data received:', data);
                 } catch (error) {
@@ -101,14 +101,10 @@
                 // Answer: /cookies-matter
                 if (input === '/cookies-matter' || input === 'cookies-matter') {
                     result.innerHTML =
-                        '<div class="success-msg">✓ Excellent! Navigate to that path...</div>';
+                        '<div class="success-msg">Excellent! Navigate to that path...</div>';
                     result.className = 'result-message success';
 
-                    awardPoints(15, 'stage5_headers');
-
-                    setTimeout(() => {
-                        window.location.href = '/cookies-matter';
-                    }, 2000);
+                    awardPoints(15, 'stage6_headers');
                 } else {
                     result.innerHTML =
                         '<div class="error-msg">✗ Check the Response Headers in Network tab!</div>';

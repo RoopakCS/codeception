@@ -101,7 +101,7 @@ router.post('/register', async (req, res) => {
                 name: newParticipant.name,
                 email: newParticipant.email,
                 participantCode: newParticipant.participantCode,
-            }
+            },
         });
     } catch (error) {
         console.error('Registration error:', error);

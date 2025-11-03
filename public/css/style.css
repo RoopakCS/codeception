@@ -216,7 +216,7 @@ a:hover .user-avatar,
 }
 
 /* Remove underline from avatar links */
-a[href*="participant.html"] {
+a[href*='participant.html'] {
     text-decoration: none !important;
 }
 
@@ -396,11 +396,7 @@ a[href*="participant.html"] {
 }
 
 .btn-primary {
-    background: linear-gradient(
-        135deg,
-        var(--accent-cyan),
-        var(--btn-interactive)
-    );
+    background: #00dbff;
     color: var(--bg-primary);
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
 }

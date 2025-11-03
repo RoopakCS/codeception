@@ -44,23 +44,29 @@ router.post('/award-points', authenticateToken, async (req, res) => {
                 success: true,
                 message: 'Stage already completed',
                 alreadyCompleted: true,
-                totalScore: scoreDoc.score
+                totalScore: scoreDoc.score,
             });
         }
 
         // Log before update
-        console.log('Before update - Score:', scoreDoc.score, 'Points to add:', points);
+        console.log(
+            'Before update - Score:',
+            scoreDoc.score,
+            'Points to add:',
+            points
+        );
 
         const now = new Date();
-        const shouldActivate = !scoreDoc.startTime && !scoreDoc.completedStages.length;
+        const shouldActivate =
+            !scoreDoc.startTime && !scoreDoc.completedStages.length;
 
         try {
             // Use a single atomic findOneAndUpdate operation
             const updatedScore = await Score.findOneAndUpdate(
-                { 
+                {
                     _id: scoreDoc._id,
                     // Safety check to prevent duplicate awards
-                    completedStages: { $ne: stage }
+                    completedStages: { $ne: stage },
                 },
                 {
                     $inc: { score: points },
@@ -68,21 +74,21 @@ router.post('/award-points', authenticateToken, async (req, res) => {
                         lastUpdated: now,
                         ...(shouldActivate && {
                             startTime: now,
-                            status: 'active'
-                        })
+                            status: 'active',
+                        }),
                     },
                     $push: {
                         completedStages: stage,
                         puzzlesSolved: {
                             puzzleId: stage,
                             solvedAt: now,
-                            points: points
-                        }
-                    }
+                            points: points,
+                        },
+                    },
                 },
-                { 
+                {
                     new: true,
-                    runValidators: true
+                    runValidators: true,
                 }
             );
 
@@ -94,7 +100,7 @@ router.post('/award-points', authenticateToken, async (req, res) => {
                         success: true,
                         message: 'Stage already completed',
                         alreadyCompleted: true,
-                        totalScore: currentScore.score
+                        totalScore: currentScore.score,
                     });
                 }
                 throw new Error('Failed to update score document');
@@ -108,7 +114,7 @@ router.post('/award-points', authenticateToken, async (req, res) => {
                 previousScore: scoreDoc.score,
                 newScore: updatedScore.score,
                 totalPuzzles: updatedScore.puzzlesSolved.length,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
             });
 
             res.json({
@@ -118,7 +124,7 @@ router.post('/award-points', authenticateToken, async (req, res) => {
                 stage,
                 completedStages: updatedScore.completedStages,
                 previousScore: scoreDoc.score,
-                pointsAdded: points
+                pointsAdded: points,
             });
         } catch (updateError) {
             console.error('Error updating score:', updateError);
@@ -129,30 +135,30 @@ router.post('/award-points', authenticateToken, async (req, res) => {
             error: error.message,
             participant: req.user?.registerNumber,
             stage,
-            points
+            points,
         });
-        
+
         // Send appropriate error response
         if (error.message.includes('already completed')) {
-            return res.status(400).json({ 
-                success: false, 
+            return res.status(400).json({
+                success: false,
                 message: 'Stage already completed',
-                error: error.message 
+                error: error.message,
             });
         }
-        
+
         if (error.message.includes('Score record not found')) {
-            return res.status(404).json({ 
-                success: false, 
+            return res.status(404).json({
+                success: false,
                 message: 'Score record not found',
-                error: error.message 
+                error: error.message,
             });
         }
-        
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to award points', 
-            error: error.message 
+
+        res.status(500).json({
+            success: false,
+            message: 'Failed to award points',
+            error: error.message,
         });
     }
 });

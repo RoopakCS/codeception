@@ -33,34 +33,16 @@
                         <p class="instruction-text">
                             Time to master the console...
                         </p>
-                        <p class="hint-text">
-                            💡 Use console.table(), console.group(), and inspect
-                            objects
-                        </p>
 
                         <div class="code-display">
-                            <pre>
-Try typing in console:
-> window.challengeData
-> console.table(window.participants)
-> window.secretFunction()</pre
-                            >
+                            <pre>O P E N T H E C O N S O L E</pre>
                         </div>
-
-                        <button
-                            onclick="initConsoleChallenge()"
-                            class="btn btn-secondary"
-                        >
-                            <span>🎮 Initialize Console Challenge</span>
-                        </button>
 
                         <div id="consoleHint" style="margin-top: 20px"></div>
                     </div>
 
                     <div class="decode-input-section" style="margin-top: 30px">
-                        <label for="consoleAnswer"
-                            >What's the password from challengeData?</label
-                        >
+                        <label for="consoleAnswer">What's the password?</label>
                         <input
                             type="text"
                             id="consoleAnswer"
@@ -82,23 +64,6 @@ Try typing in console:
         <script src="./js/script.js"></script>
         <script>
             // Hidden challenge data in window object
-            window.challengeData = {
-                stage: 9,
-                name: 'Console Wizardry',
-                password: 'debugger_master_2025',
-                nextStage: '/sources-final',
-                hint: 'Objects in console are expandable',
-                _secret: {
-                    developer: true,
-                    level: 'expert',
-                },
-            };
-
-            window.participants = [
-                { name: 'Alice', score: 90, status: 'active' },
-                { name: 'Bob', score: 85, status: 'completed' },
-                { name: 'Charlie', score: 95, status: 'active' },
-            ];
 
             window.secretFunction = function () {
                 console.group('🔐 Secret Information');
@@ -106,13 +71,18 @@ Try typing in console:
                     '%cThe password is hidden in challengeData object',
                     'color: #00FFFF; font-size: 16px;'
                 );
-                console.log('Expand the object to find it...');
-                console.table([
-                    { key: 'stage', value: challengeData.stage },
-                    { key: 'name', value: challengeData.name },
-                ]);
-                console.groupEnd();
                 return 'Check the challengeData object!';
+            };
+
+            window.challengeData = {
+                stage: 9,
+                name: 'Console Wizardry',
+                password: 'debugger_master_2025',
+                hint: 'Objects in console are expandable',
+                _secret: {
+                    developer: true,
+                    level: 'expert',
+                },
             };
 
             window.addEventListener('DOMContentLoaded', () => {
@@ -123,38 +93,9 @@ Try typing in console:
                         '%c🎯 Console Challenge Loaded!',
                         'background: #9D4EDD; color: white; padding: 5px 10px; font-size: 16px;'
                     );
-                    console.log('Try these commands:');
-                    console.log('  1. window.challengeData');
-                    console.log('  2. console.table(window.participants)');
-                    console.log('  3. window.secretFunction()');
+                    console.log('try window.secretFunction()');
                 }, 1000);
             });
-
-            function initConsoleChallenge() {
-                document.getElementById('consoleHint').innerHTML =
-                    `<div class="success-msg">✓ Challenge initialized! Open Console and explore window.challengeData</div>`;
-
-                console.clear();
-                console.log(
-                    '%c═══════════════════════════════════════',
-                    'color: #00FFFF'
-                );
-                console.log(
-                    '%c   CONSOLE CHALLENGE ACTIVATED',
-                    'color: #00FF9C; font-size: 18px; font-weight: bold;'
-                );
-                console.log(
-                    '%c═══════════════════════════════════════',
-                    'color: #00FFFF'
-                );
-                console.log('');
-                console.log('Available objects:');
-                console.log('  • window.challengeData');
-                console.log('  • window.participants');
-                console.log('  • window.secretFunction()');
-                console.log('');
-                console.warn('⚠️ Expand objects to see all properties!');
-            }
 
             function checkConsole() {
                 const input = document
@@ -165,14 +106,11 @@ Try typing in console:
                 // Answer: debugger_master_2025
                 if (input === 'debugger_master_2025') {
                     result.innerHTML =
-                        '<div class="success-msg">✓ Excellent! Final stage awaits at /sources-final</div>';
+                        '<div class="success-msg">Excellent! See the console</div>';
+                    console.log('Final stage awaits at /sources-final');
                     result.className = 'result-message success';
 
                     awardPoints(15, 'stage8_console_found');
-
-                    setTimeout(() => {
-                        window.location.href = '/sources-final';
-                    }, 2500);
                 } else {
                     result.innerHTML =
                         '<div class="error-msg">✗ Explore window.challengeData in console</div>';

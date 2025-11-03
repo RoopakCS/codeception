@@ -25,8 +25,12 @@
 }
 
 @keyframes vault-security {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(100%); }
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 /* 
@@ -34,7 +38,7 @@
    Key validation sequence:
    [CLASSIFIED-2025]
    Encoded vault content:
-   681b091a09000a1c15001a150214 
+   o3cGZz5XpKIkIRu0pID4qT96FGOkZwyfozjkM0kYDGOAF1L= 
 */
 
 /* Key: Check the animation above for secrets */

@@ -10,25 +10,33 @@ router.get('/', async (req, res) => {
         // Force fresh data with lean() for better performance
         const scores = await Score.find({}, null, { lean: true })
             .sort({ score: -1, timeTaken: 1 })
-            .select('registerNumber score timeTaken status completedStages startTime completionTime puzzlesSolved');
+            .select(
+                'registerNumber score timeTaken status completedStages startTime completionTime puzzlesSolved'
+            );
 
         // Get participant details for each score
         const scoreWithDetails = await Promise.all(
             scores.map(async (score) => {
                 const participant = await Participant.findOne(
-                    { registerNumber: score.registerNumber }, 
+                    { registerNumber: score.registerNumber },
                     'name registerNumber department participantCode',
                     { lean: true }
                 );
-                
+
                 return {
                     ...score,
                     name: participant?.name || 'Unknown',
                     department: participant?.department || 'Unknown',
                     participantCode: participant?.participantCode || 'Unknown',
                     totalPuzzles: score.puzzlesSolved?.length || 0,
-                    formattedTime: score.timeTaken ? `${Math.floor(score.timeTaken / 60)}h ${score.timeTaken % 60}m` : '--',
-                    lastStageCompleted: score.completedStages?.length ? score.completedStages[score.completedStages.length - 1] : null
+                    formattedTime: score.timeTaken
+                        ? `${Math.floor(score.timeTaken / 60)}h ${score.timeTaken % 60}m`
+                        : '--',
+                    lastStageCompleted: score.completedStages?.length
+                        ? score.completedStages[
+                              score.completedStages.length - 1
+                          ]
+                        : null,
                 };
             })
         );
@@ -40,7 +48,10 @@ router.get('/', async (req, res) => {
         let sameRankCount = 0;
 
         const rankedScores = scoreWithDetails.map((score, index) => {
-            if (score.score !== currentScore || score.timeTaken !== currentTime) {
+            if (
+                score.score !== currentScore ||
+                score.timeTaken !== currentTime
+            ) {
                 currentRank = index + 1 - sameRankCount;
                 currentScore = score.score;
                 currentTime = score.timeTaken;
@@ -61,18 +72,21 @@ router.get('/', async (req, res) => {
             count: rankedScores.length,
             lastUpdated: new Date().toISOString(),
             topScore: rankedScores[0]?.score || 0,
-            activePlayers: rankedScores.filter(s => s.status === 'active').length,
-            completedPlayers: rankedScores.filter(s => s.status === 'completed').length
+            activePlayers: rankedScores.filter((s) => s.status === 'active')
+                .length,
+            completedPlayers: rankedScores.filter(
+                (s) => s.status === 'completed'
+            ).length,
         });
     } catch (error) {
         console.error('Leaderboard error:', {
             error: error.message,
-            stack: error.stack
+            stack: error.stack,
         });
         res.status(500).json({
             success: false,
             message: 'Failed to fetch leaderboard',
-            error: error.message
+            error: error.message,
         });
     }
 });
@@ -125,7 +139,7 @@ router.put('/score/:registerNumber', authenticateToken, async (req, res) => {
                     // Check if puzzle already solved
                     const existingPuzzle = await Score.findOne({
                         registerNumber: registerNumber.toUpperCase(),
-                        'puzzlesSolved.puzzleId': puzzleId
+                        'puzzlesSolved.puzzleId': puzzleId,
                     });
 
                     if (!existingPuzzle) {
@@ -139,11 +153,11 @@ router.put('/score/:registerNumber', authenticateToken, async (req, res) => {
                                         points,
                                     },
                                 },
-                                $inc: { score: points }
+                                $inc: { score: points },
                             },
                             { session }
                         );
-                        
+
                         // Refetch after puzzle update
                         updatedScore = await Score.findOne(
                             { registerNumber: registerNumber.toUpperCase() },
@@ -161,7 +175,7 @@ router.put('/score/:registerNumber', authenticateToken, async (req, res) => {
             success: true,
             message: 'Score updated successfully',
             score: updatedScore,
-            puzzleAdded: puzzleId && points !== undefined
+            puzzleAdded: puzzleId && points !== undefined,
         });
     } catch (error) {
         console.error('Score update error:', {
@@ -171,21 +185,21 @@ router.put('/score/:registerNumber', authenticateToken, async (req, res) => {
             timeTaken,
             status,
             puzzleId,
-            points
+            points,
         });
-        
+
         if (error.message === 'Score document not found') {
             return res.status(404).json({
                 success: false,
                 message: 'Score record not found',
-                error: error.message
+                error: error.message,
             });
         }
-        
+
         res.status(500).json({
             success: false,
             message: 'Failed to update score',
-            error: error.message
+            error: error.message,
         });
     }
 });

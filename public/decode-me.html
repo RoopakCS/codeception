@@ -35,9 +35,7 @@
                         <div class="encrypted-text" id="encryptedText">
                             U29tZXRpbWVzIHRoZSBvYnZpb3VzIGlzIGhpZGRlbiBpbiBwbGFpbiBzaWdodA==
                         </div>
-                        <p class="hint-text">
-                            💡atob()
-                        </p>
+                        <p class="hint-text">💡atob()</p>
                     </div>
 
                     <div class="decode-input-section">
@@ -97,7 +95,8 @@
 
             async function awardPoints(points, stage) {
                 const participantCode = localStorage.getItem('participantCode');
-                const participantEmail = localStorage.getItem('participantEmail');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
                 const authToken = localStorage.getItem('authToken');
 
                 if (!participantCode || !participantEmail) {
@@ -106,39 +105,51 @@
                 }
 
                 try {
-                    const response = await fetch('/api/challenges/award-points', {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${authToken}`
-                        },
-                        body: JSON.stringify({
-                            participantCode,
-                            email: participantEmail,
-                            points,
-                            stage,
-                        }),
-                    });
+                    const response = await fetch(
+                        '/api/challenges/award-points',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                            body: JSON.stringify({
+                                participantCode,
+                                email: participantEmail,
+                                points,
+                                stage,
+                            }),
+                        }
+                    );
 
                     if (!response.ok) {
                         if (response.status === 401) {
                             // Token expired or invalid
-                            console.error('Authentication failed. Please log in again.');
+                            console.error(
+                                'Authentication failed. Please log in again.'
+                            );
                             // Redirect to login
                             window.location.href = '/login.html';
                             return;
                         }
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`
+                        );
                     }
 
                     const result = await response.json();
-                    
+
                     if (result.success) {
                         // Update local completed stages
-                        const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+                        const completedStages = JSON.parse(
+                            localStorage.getItem('completedStages') || '[]'
+                        );
                         if (!completedStages.includes(stage)) {
                             completedStages.push(stage);
-                            localStorage.setItem('completedStages', JSON.stringify(completedStages));
+                            localStorage.setItem(
+                                'completedStages',
+                                JSON.stringify(completedStages)
+                            );
                         }
                     }
                 } catch (error) {

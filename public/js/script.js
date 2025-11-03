@@ -151,7 +151,7 @@ function initRegistrationForm() {
                 localStorage.setItem('participantEmail', formData.email);
                 localStorage.setItem('participantName', result.name);
                 localStorage.setItem('authToken', result.token);
-                
+
                 // Auto redirect to challenges after a short delay
                 setTimeout(() => {
                     window.location.href = '/index.html';
@@ -746,11 +746,14 @@ function showScoreNotification(points, totalScore) {
 // ===== DECODE STAGE =====
 function initDecodeStage() {
     // Check if already completed
-    const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+    const completedStages = JSON.parse(
+        localStorage.getItem('completedStages') || '[]'
+    );
     if (completedStages.includes('stage2_decode')) {
         const result = document.getElementById('decodeResult');
         if (result) {
-            result.innerHTML = '<div class="success-msg">✓ Stage already completed!</div>';
+            result.innerHTML =
+                '<div class="success-msg">✓ Stage already completed!</div>';
             result.className = 'result-message success';
         }
     }
@@ -758,7 +761,7 @@ function initDecodeStage() {
     // Add enter key support for decode input
     const decodeInput = document.getElementById('decodeInput');
     if (decodeInput) {
-        decodeInput.addEventListener('keypress', function(e) {
+        decodeInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 checkDecode();
@@ -780,10 +783,12 @@ function initDarkCornerStage() {
     }
 
     // Check if already completed
-    const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+    const completedStages = JSON.parse(
+        localStorage.getItem('completedStages') || '[]'
+    );
     if (completedStages.includes('stage3_dark_corner')) {
         console.log(
-            '%c🌑 You have already conquered the darkness...',
+            '%c🌑 You have already conquered the darkness... see elements',
             'color: #9D4EDD; font-size: 14px;'
         );
     }
@@ -802,11 +807,14 @@ function initColorRiddle() {
     }
 
     // Check if already completed
-    const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+    const completedStages = JSON.parse(
+        localStorage.getItem('completedStages') || '[]'
+    );
     if (completedStages.includes('stage4_color_riddle')) {
         const result = document.getElementById('finalResult');
         if (result) {
-            result.innerHTML = '<div class="success-msg">✓ Stage already completed!</div>';
+            result.innerHTML =
+                '<div class="success-msg">✓ Stage already completed!</div>';
             result.className = 'result-message success';
         }
     }
@@ -814,7 +822,7 @@ function initColorRiddle() {
     // Add enter key support
     const answerInput = document.getElementById('finalAnswer');
     if (answerInput) {
-        answerInput.addEventListener('keypress', function(e) {
+        answerInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 checkFinalAnswer();
@@ -828,7 +836,7 @@ function rotateChar(char, shift) {
     const alphabet = 'abcdefghijklmnopqrstuvwxyz';
     const isUpperCase = char === char.toUpperCase();
     char = char.toLowerCase();
-    
+
     if (alphabet.includes(char)) {
         let index = alphabet.indexOf(char);
         index = (index + shift) % 26;
@@ -841,8 +849,10 @@ function rotateChar(char, shift) {
 
 function xorString(str, key) {
     let result = '';
-    for(let i = 0; i < str.length; i++) {
-        result += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    for (let i = 0; i < str.length; i++) {
+        result += String.fromCharCode(
+            str.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+        );
     }
     return result;
 }
@@ -851,19 +861,36 @@ function customEncode(text) {
     // First convert to base64
     const base64 = btoa(text);
     // Then encode to ROT13
-    return base64.split('').map(char => rotateChar(char, 13)).join('');
+    return base64
+        .split('')
+        .map((char) => rotateChar(char, 13))
+        .join('');
 }
 
 function customDecode(text) {
     try {
         // First decode ROT13
-        const rot13decoded = text.split('').map(char => rotateChar(char, -13)).join('');
+        const rot13decoded = text
+            .split('')
+            .map((char) => rotateChar(char, -13))
+            .join('');
         // Then decode base64
         return atob(rot13decoded);
     } catch (e) {
         return '';
     }
 }
+
+const challengeData = {
+    stage: 7,
+    name: 'Console Wizardry',
+    password: 'debugger_master_2025',
+    hint: 'Objects in console are expandable',
+    _secret: {
+        developer: true,
+        level: 'expert',
+    },
+};
 
 // ===== FORM VALIDATION ENHANCEMENTS =====
 document.querySelectorAll('input[required]').forEach((input) => {

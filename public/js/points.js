@@ -18,16 +18,21 @@ async function awardPoints(points, stage) {
         });
 
         const result = await response.json();
-        
+
         if (result.success && !result.alreadyCompleted) {
             // Show score notification
             showScoreNotification(points, result.totalScore);
-            
+
             // Update stages tracking
-            const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
+            const completedStages = JSON.parse(
+                localStorage.getItem('completedStages') || '[]'
+            );
             if (!completedStages.includes(stage)) {
                 completedStages.push(stage);
-                localStorage.setItem('completedStages', JSON.stringify(completedStages));
+                localStorage.setItem(
+                    'completedStages',
+                    JSON.stringify(completedStages)
+                );
             }
         }
 

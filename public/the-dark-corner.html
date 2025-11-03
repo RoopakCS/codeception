@@ -47,7 +47,8 @@
             // Stage 3 complete - award points
             setTimeout(async () => {
                 const participantCode = localStorage.getItem('participantCode');
-                const participantEmail = localStorage.getItem('participantEmail');
+                const participantEmail =
+                    localStorage.getItem('participantEmail');
                 const authToken = localStorage.getItem('authToken');
 
                 if (!participantCode || !participantEmail || !authToken) {
@@ -57,44 +58,58 @@
                 }
 
                 try {
-                    const response = await fetch('/api/challenges/award-points', {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${authToken}`
-                        },
-                        body: JSON.stringify({
-                            participantCode,
-                            email: participantEmail,
-                            points: 10,
-                            stage: 'stage3_dark_corner',
-                        }),
-                    });
+                    const response = await fetch(
+                        '/api/challenges/award-points',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                            body: JSON.stringify({
+                                participantCode,
+                                email: participantEmail,
+                                points: 10,
+                                stage: 'stage3_dark_corner',
+                            }),
+                        }
+                    );
 
                     if (!response.ok) {
                         if (response.status === 401) {
                             // Token expired or invalid
-                            console.log('Session expired. Please log in again.');
+                            console.log(
+                                'Session expired. Please log in again.'
+                            );
                             window.location.href = '/login.html';
                             return;
                         }
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`
+                        );
                     }
 
                     const result = await response.json();
-                    
+
                     if (result.success && !result.alreadyCompleted) {
                         // Show score notification if points.js is loaded
                         if (typeof showScoreNotification === 'function') {
                             showScoreNotification(10, result.totalScore);
                         }
-                        
+
                         // Update stages tracking
                         try {
-                            const completedStages = JSON.parse(localStorage.getItem('completedStages') || '[]');
-                            if (!completedStages.includes('stage3_dark_corner')) {
+                            const completedStages = JSON.parse(
+                                localStorage.getItem('completedStages') || '[]'
+                            );
+                            if (
+                                !completedStages.includes('stage3_dark_corner')
+                            ) {
                                 completedStages.push('stage3_dark_corner');
-                                localStorage.setItem('completedStages', JSON.stringify(completedStages));
+                                localStorage.setItem(
+                                    'completedStages',
+                                    JSON.stringify(completedStages)
+                                );
 
                                 console.log(
                                     '%c🌑 Welcome to the dark corner. Inspect the HTML source carefully...',
@@ -102,7 +117,10 @@
                                 );
                             }
                         } catch (storageError) {
-                            console.error('Error updating local storage:', storageError);
+                            console.error(
+                                'Error updating local storage:',
+                                storageError
+                            );
                             // Clear potentially corrupted data
                             localStorage.setItem('completedStages', '[]');
                         }

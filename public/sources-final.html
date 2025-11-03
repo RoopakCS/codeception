@@ -54,13 +54,6 @@ Instructions:
                             >
                         </div>
 
-                        <button
-                            onclick="window.startDebugChallenge()"
-                            class="btn btn-secondary"
-                        >
-                            <span>🐛 Start Debug Challenge</span>
-                        </button>
-
                         <div id="debugHint" style="margin-top: 20px"></div>
                     </div>
 
@@ -108,19 +101,19 @@ Instructions:
                 const result = document.getElementById('debugResult');
 
                 // Answer: CODECEPTION_MASTER_2025 (from sourceChallenge.js)
-                if (input === 'CODECEPTION_MASTER_2025') {
+                if (input === '5202_RETSAM_NOITPECEDOC') {
                     result.innerHTML =
                         '<div class="success-msg">🎉 PERFECT! You\'ve mastered DevTools! Redirecting to completion...</div>';
                     result.className = 'result-message success';
 
-                    awardPoints(10, 'stage10_debugger_found');
+                    awardPoints(10, 'stage8_debugger_found');
 
                     setTimeout(() => {
                         window.location.href = '/final-access.html';
                     }, 3000);
                 } else {
                     result.innerHTML =
-                        '<div class="error-msg">✗ Use Sources tab and set a breakpoint to find the secretCode</div>';
+                        '<div class="error-msg">Sometimes you have to think backwards</div>';
                     result.className = 'result-message error';
                 }
             }

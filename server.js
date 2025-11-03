@@ -76,14 +76,17 @@ app.get('/hidden/final', (req, res) => {
 app.post('/api/vault-unlock', (req, res) => {
     // The key is in the request headers
     const vaultKey = req.headers['x-vault-key'];
-    
+
     // Send response with the key in headers
-    res.setHeader('X-Vault-Key', vaultKey || 'WjI4Z2RHOGdMMmR5WVhabGJXRnpkR1Z5');
+    res.setHeader(
+        'X-Vault-Key',
+        vaultKey || 'WjI4Z2RHOGdMMmR5WVhabGJXRnpkR1Z5'
+    );
     res.setHeader('X-Vault-Status', 'ACTIVE');
     res.setHeader('X-Vault-Level', '5');
     res.json({
         status: 'Vault system active',
-        message: 'Check response headers for the key'
+        message: 'Check response headers for the key',
     });
 });
 
@@ -94,7 +97,7 @@ app.get('/api/vault-unlock', (req, res) => {
     res.setHeader('X-Vault-Level', '5');
     res.json({
         status: 'Vault system active',
-        message: 'Inspect the response headers carefully'
+        message: 'Inspect the response headers carefully',
     });
 });
 

@@ -81,7 +81,7 @@
                     'hint=check_all_cookies; path=/; max-age=3600';
 
                 document.getElementById('cookieHint').innerHTML =
-                    `<div class="success-msg">✓ Cookie baked! Check Application → Storage → Cookies → http://localhost:3000</div>`;
+                    `<div class="success-msg">Cookie baked! check applications tab</div>`;
 
                 console.log(
                     '%c🍪 Cookies set! Inspect them in the Application tab',
@@ -98,14 +98,10 @@
                 // Answer: performance_tab_awaits
                 if (input === 'performance_tab_awaits') {
                     result.innerHTML =
-                        '<div class="success-msg">✓ Perfect! Moving to console wizardry challenge!</div>';
+                        '<div class="success-msg">Perfect! Navigate to wizardry-challenge</div>';
                     result.className = 'result-message success';
 
-                    awardPoints(15, 'stage6_cookie_found');
-
-                    setTimeout(() => {
-                        window.location.href = '/console-wizardry';
-                    }, 2500);
+                    awardPoints(15, 'stage7_cookie_found');
                 } else {
                     result.innerHTML =
                         '<div class="error-msg">✗ Look in Application tab → Cookies</div>';

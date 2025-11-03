@@ -45,7 +45,7 @@
 
     // Debug challenge function
     window.startDebugChallenge = function () {
-        debugger; // This will pause execution
+        debugger; // This will pause execution, resume the script execution
 
         console.log('Debug challenge started!');
         console.log('Check the variables in the Scope panel →');
@@ -59,7 +59,6 @@
         const processed = {
             original: code,
             length: code.length,
-            reversed: code.split('').reverse().join(''),
             hash: btoa(code),
         };
 
