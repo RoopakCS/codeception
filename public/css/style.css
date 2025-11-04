@@ -558,7 +558,7 @@ a[href*='participant.html'] {
 /* ===== CONTENT GRID ===== */
 .content-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
     gap: 2rem;
     margin-bottom: 2rem;
 }
@@ -766,9 +766,413 @@ a[href*='participant.html'] {
     gap: 1.5rem;
 }
 
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet and below */
+@media (max-width: 1024px) {
+    .nav-container {
+        padding: 0 1.5rem;
+    }
+
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+    }
+
+    .neon-logo {
+        font-size: 4rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .event-stats {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+}
+
+/* Mobile landscape and below */
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
+    }
+
+    .challenge-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .challenge-title {
+        font-size: 2rem;
+    }
+
+    .glitch-text {
+        font-size: 1.8rem;
+    }
+
+    .tooltip .tooltip-text {
+        width: 150px;
+        margin-left: -75px;
+        font-size: 0.8rem;
+    }
+
+    .loading-overlay .loading-spinner {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Navigation improvements */
+    .nav-menu {
+        gap: 1rem;
+        font-size: 0.85rem;
+    }
+
+    .nav-menu a {
+        font-size: 0.85rem;
+    }
+
+    .logo .glow-text {
+        font-size: 1.2rem;
+    }
+
+    /* Hero section */
+    .hero-section {
+        padding: 3rem 0;
+        min-height: auto;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+
+    .neon-logo {
+        font-size: 3rem;
+    }
+
+    .cta-buttons {
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .btn {
+        padding: 0.875rem 2rem;
+        font-size: 0.95rem;
+    }
+
+    /* Event stats */
+    .event-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem;
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    /* Content sections */
+    .content-section {
+        padding: 3rem 0;
+    }
+
+    .page-header {
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .info-card {
+        padding: 1.5rem;
+    }
+
+    .info-card h3 {
+        font-size: 1.3rem;
+    }
+
+    /* Forms */
+    .form-card {
+        padding: 2rem 1.5rem;
+    }
+
+    /* Leaderboard */
+    .leaderboard-table {
+        font-size: 0.9rem;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 0.875rem;
+    }
+
+    /* Rules grid */
+    .rules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rule-item {
+        padding: 1.25rem;
+    }
+
+    /* How it works list */
+    .how-it-works-list {
+        padding-left: 1.5rem;
+    }
+
+    .how-it-works-list li {
+        font-size: 0.95rem;
+    }
+}
+
+/* Mobile portrait */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .nav-menu {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        justify-content: center;
+    }
+
+    .nav-menu li {
+        flex: 0 0 auto;
+    }
+
+    .logo .glow-text {
+        font-size: 1rem;
+    }
+
+    /* Hero section */
+    .hero-title {
+        font-size: 1.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+        padding: 0 0.5rem;
+    }
+
+    .neon-logo {
+        font-size: 2.5rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* Event stats */
+    .event-stats {
+        padding: 0 0.5rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-icon {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    /* Content sections */
+    .page-title {
+        font-size: 1.75rem;
+    }
+
+    .page-subtitle {
+        font-size: 1rem;
+    }
+
+    .info-card {
+        padding: 1.25rem;
+    }
+
+    .info-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Forms */
+    .form-card {
+        padding: 1.5rem;
+    }
+
+    .form-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 0.9rem;
+        padding: 0.875rem;
+    }
+
+    /* Leaderboard */
+    .leaderboard-table {
+        font-size: 0.8rem;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .leaderboard-table th:nth-child(3),
+    .leaderboard-table td:nth-child(3) {
+        display: none; /* Hide college column on very small screens */
+    }
+
+    .rank-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    /* Challenge cards */
+    .challenge-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .challenge-title {
+        font-size: 1.5rem;
+    }
+
+    .challenge-description {
+        font-size: 0.9rem;
+    }
+
+    /* Rules */
+    .rule-item {
+        padding: 1rem;
+    }
+
+    .rule-number {
+        font-size: 1.25rem;
+        min-width: 35px;
+        height: 35px;
+    }
+
+    .rule-item h4 {
+        font-size: 1rem;
+    }
+
+    .rule-item p {
+        font-size: 0.85rem;
+    }
+
+    /* Tooltips */
+    .tooltip .tooltip-text {
+        width: 120px;
+        margin-left: -60px;
+        font-size: 0.75rem;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+        height: 8px;
+    }
+
+    /* Stage list */
+    .stage-list {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .stage-item {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .hero-title {
+        font-size: 1.25rem;
+    }
+
+    .neon-logo {
+        font-size: 2rem;
+    }
+
+    .nav-menu {
+        font-size: 0.7rem;
+        gap: 0.25rem;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        padding: 0.65rem 1.25rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .info-card {
+        padding: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1rem;
     }
 }
 
@@ -1268,11 +1672,14 @@ a[href*='participant.html'] {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .leaderboard-table {
     width: 100%;
+    min-width: 500px; /* Prevents table from getting too cramped on mobile */
     border-collapse: collapse;
 }
 
@@ -2263,83 +2670,56 @@ a[href*='participant.html'] {
     margin: 2rem 0;
 }
 
+/* ===== MOBILE TOUCH IMPROVEMENTS ===== */
+/* Increase touch target sizes for better mobile UX */
 @media (max-width: 768px) {
-    .challenge-card {
-        padding: 2rem 1.5rem;
+    .btn,
+    .nav-menu a,
+    input,
+    select,
+    textarea {
+        min-height: 44px; /* iOS recommended touch target size */
     }
 
-    .challenge-title {
-        font-size: 2rem;
+    /* Prevent zoom on input focus on iOS */
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
     }
 
-    .glitch-text {
-        font-size: 1.8rem;
+    /* Better spacing for touch interactions */
+    .cta-buttons .btn {
+        min-width: 200px;
     }
 
-    .tooltip .tooltip-text {
-        width: 150px;
-        margin-left: -75px;
-        font-size: 0.8rem;
+    /* Improve clickable area for links */
+    .info-card a,
+    .coordinator-contact a,
+    .linkedin-link {
+        padding: 0.5rem;
+        margin: -0.5rem;
     }
 
-    .loading-overlay .loading-spinner {
-        width: 40px;
-        height: 40px;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 0 1rem;
+    /* Scrollbar styling for webkit browsers */
+    .leaderboard-table-container::-webkit-scrollbar {
+        height: 8px;
     }
 
-    .nav-container {
-        padding: 0 1rem;
+    .leaderboard-table-container::-webkit-scrollbar-track {
+        background: rgba(0, 255, 255, 0.1);
     }
 
-    .nav-menu {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        font-size: 0.75rem;
+    .leaderboard-table-container::-webkit-scrollbar-thumb {
+        background: var(--accent-cyan);
+        border-radius: 4px;
     }
 
-    .hero-title {
-        font-size: 1.8rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-
-    .hero-description {
-        font-size: 1rem;
-    }
-
-    .form-card {
-        padding: 1.5rem;
-    }
-
-    .leaderboard-table th,
-    .leaderboard-table td {
-        padding: 1rem 0.5rem;
-        font-size: 0.85rem;
-    }
-
-    .btn {
-        padding: 0.75rem 1.5rem;
-        font-size: 0.9rem;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        font-size: 0.9rem;
-    }
-
-    .tooltip .tooltip-text {
-        width: 120px;
-        margin-left: -60px;
-        font-size: 0.75rem;
+    /* Prevent text selection issues on touch */
+    .btn,
+    .nav-menu a {
+        -webkit-tap-highlight-color: rgba(0, 255, 255, 0.2);
+        user-select: none;
     }
 }
 
