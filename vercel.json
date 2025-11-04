@@ -31,11 +31,5 @@
       "src": "/(.*\\.html)?",
       "dest": "/server.js"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/server.js"
-    }
   ]
 }
