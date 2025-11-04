@@ -59,6 +59,15 @@
                             <h2 id="profileName" class="highlight"></h2>
                             <p id="profileEmail" class="text-muted"></p>
                         </div>
+                        
+                        <!-- Progress Section -->
+                        <div class="progress-section">
+                            <h4>Challenge Progress</h4>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                                <div class="progress-text" id="progressText">0%</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="info-card">
@@ -85,6 +94,13 @@
                         </div>
                     </div>
 
+                    <!-- <div class="info-card">
+                        <h3>Completed Stages</h3>
+                        <div class="stage-list" id="stageList">
+                            Stages will be populated by JavaScript
+                        </div>
+                    </div> -->
+
                     <div class="info-card">
                         <h3>Account Actions</h3>
                         <div class="form-actions" style="margin-top: 1rem">
@@ -109,6 +125,20 @@
 
         <script src="/js/script.js"></script>
         <script>
+            // Stage names mapping
+            const stageNames = {
+                stage1_decode_me: 'Decode Me',
+                stage2_dark_corner: 'The Dark Corner',
+                stage3_network_master: 'Network Master',
+                stage4_cookies_matter: 'Cookies Matter',
+                stage5_color_riddle: 'Color Riddle',
+                stage6_vault_secrets: 'Vault Secrets',
+                stage7_console_wizardry: 'Console Wizardry',
+                stage8_final_access: 'Final Access',
+                stage9_sources_final: 'Sources Final',
+                stage10_completion: 'Grand Finale'
+            };
+
             // Load participant data
             document.addEventListener('DOMContentLoaded', function () {
                 const participantName = localStorage.getItem('participantName');
@@ -137,6 +167,9 @@
 
                 // Load participant stats from server
                 loadParticipantStats();
+                
+                // Update progress display
+                updateProgressDisplay();
             });
 
             async function loadParticipantStats() {
@@ -146,15 +179,63 @@
                     );
                     if (response.ok) {
                         const stats = await response.json();
+                        
+                        // Update display
                         document.getElementById('currentScore').textContent =
                             stats.score || '0';
                         document.getElementById('puzzlesSolved').textContent =
                             stats.puzzlesSolved || '0';
                         document.getElementById('timeSpent').textContent =
                             formatTime(stats.timeSpent || 0);
+                        
+                        // Sync server data with localStorage
+                        if (stats.completedStages && Array.isArray(stats.completedStages)) {
+                            localStorage.setItem('completedStages', JSON.stringify(stats.completedStages));
+                        }
+                        
+                        // Update progress after loading stats from server
+                        updateProgressDisplay(stats.completedStages || []);
                     }
                 } catch (error) {
                     console.error('Failed to load participant stats:', error);
+                    // Fallback to localStorage if server fails
+                    updateProgressDisplay();
+                }
+            }
+
+            function updateProgressDisplay(serverStages = null) {
+                // Use server data if available, otherwise fall back to localStorage
+                const completedStages = serverStages || JSON.parse(localStorage.getItem('completedStages') || '[]');
+                const totalStages = 10;
+                const completedCount = completedStages.length;
+                const progressPercentage = Math.round((completedCount / totalStages) * 100);
+
+                // Update progress bar
+                const progressBar = document.getElementById('progressBar');
+                const progressText = document.getElementById('progressText');
+                
+                if (progressBar && progressText) {
+                    progressBar.style.width = progressPercentage + '%';
+                    progressText.textContent = `${completedCount}/${totalStages} (${progressPercentage}%)`;
+                }
+
+                // Update stage list
+                const stageList = document.getElementById('stageList');
+                if (stageList) {
+                    stageList.innerHTML = '';
+                    
+                    Object.keys(stageNames).forEach((stageKey, index) => {
+                        const isCompleted = completedStages.includes(stageKey);
+                        const stageItem = document.createElement('div');
+                        stageItem.className = `stage-item ${isCompleted ? 'completed' : ''}`;
+                        
+                        stageItem.innerHTML = `
+                            <div class="stage-icon">${isCompleted ? '✓' : (index + 1)}</div>
+                            <div class="stage-name">${stageNames[stageKey]}</div>
+                        `;
+                        
+                        stageList.appendChild(stageItem);
+                    });
                 }
             }
         </script>

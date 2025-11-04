@@ -2,13 +2,20 @@
 async function awardPoints(points, stage) {
     const participantCode = localStorage.getItem('participantCode');
     const participantEmail = localStorage.getItem('participantEmail');
+    const authToken = localStorage.getItem('authToken');
 
-    if (!participantCode || !participantEmail) return;
+    if (!participantCode || !participantEmail || !authToken) {
+        console.error('Missing required credentials');
+        return { success: false, error: 'Missing credentials' };
+    }
 
     try {
         const response = await fetch('/api/challenges/award-points', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
             body: JSON.stringify({
                 participantCode,
                 email: participantEmail,
@@ -23,7 +30,7 @@ async function awardPoints(points, stage) {
             // Show score notification
             showScoreNotification(points, result.totalScore);
 
-            // Update stages tracking
+            // Update stages tracking in localStorage
             const completedStages = JSON.parse(
                 localStorage.getItem('completedStages') || '[]'
             );

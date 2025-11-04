@@ -62,6 +62,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update navigation based on auth status
     updateNavigation();
 
+    // Add loading overlay to DOM if not present
+    if (!document.querySelector('.loading-overlay')) {
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.className = 'loading-overlay';
+        loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+        document.body.appendChild(loadingOverlay);
+    }
+
     // Stage 1 Console Clue
     if (
         window.location.pathname === '/' ||
@@ -104,6 +112,11 @@ function initRegistrationForm() {
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        // Set button loading state
+        setButtonLoading(submitBtn, true);
+        
         // Show loading spinner
         document.getElementById('loadingSpinner').style.display = 'block';
         document.getElementById('registrationForm').style.display = 'none';
@@ -135,6 +148,7 @@ function initRegistrationForm() {
 
             // Hide loading spinner
             document.getElementById('loadingSpinner').style.display = 'none';
+            setButtonLoading(submitBtn, false);
 
             if (response.ok) {
                 // Show success message
@@ -151,6 +165,9 @@ function initRegistrationForm() {
                 localStorage.setItem('participantEmail', formData.email);
                 localStorage.setItem('participantName', result.name);
                 localStorage.setItem('authToken', result.token);
+                
+                // Initialize empty completedStages for new registration
+                localStorage.setItem('completedStages', JSON.stringify([]));
 
                 // Auto redirect to challenges after a short delay
                 setTimeout(() => {
@@ -404,8 +421,12 @@ async function handleLogin(e) {
     const errorText = document.getElementById('errorText');
     const loadingSpinner = document.getElementById('loadingSpinner');
     const loginForm = document.getElementById('loginForm');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
 
     try {
+        // Set button loading state
+        if (submitBtn) setButtonLoading(submitBtn, true);
+        
         if (loadingSpinner) loadingSpinner.style.display = 'block';
         if (loginForm) loginForm.style.display = 'none';
         if (errorDiv) errorDiv.style.display = 'none';
@@ -430,11 +451,37 @@ async function handleLogin(e) {
             localStorage.setItem('participantEmail', result.participant.email);
             localStorage.setItem('participantName', result.participant.name);
 
+            // Fetch and sync completed stages from server
+            try {
+                const statsResponse = await fetch('/api/participant-stats', {
+                    headers: {
+                        'Authorization': `Bearer ${result.token}`
+                    }
+                });
+                
+                if (statsResponse.ok) {
+                    const stats = await statsResponse.json();
+                    if (stats.completedStages && Array.isArray(stats.completedStages)) {
+                        localStorage.setItem('completedStages', JSON.stringify(stats.completedStages));
+                    } else {
+                        // Initialize empty array if no stages completed
+                        localStorage.setItem('completedStages', JSON.stringify([]));
+                    }
+                }
+            } catch (statsError) {
+                console.error('Failed to sync stages:', statsError);
+                // Initialize empty array on error
+                if (!localStorage.getItem('completedStages')) {
+                    localStorage.setItem('completedStages', JSON.stringify([]));
+                }
+            }
+
             // Update navigation and redirect to home
             updateNavigation();
             window.location.href = '/index.html';
         } else {
             // Hide loading and show form again
+            if (submitBtn) setButtonLoading(submitBtn, false);
             if (loadingSpinner) loadingSpinner.style.display = 'none';
             if (loginForm) loginForm.style.display = 'block';
             
@@ -453,6 +500,7 @@ async function handleLogin(e) {
         console.error('Login error:', error);
         
         // Hide loading and show form again
+        if (submitBtn) setButtonLoading(submitBtn, false);
         if (loadingSpinner) loadingSpinner.style.display = 'none';
         if (loginForm) loginForm.style.display = 'block';
         
@@ -916,3 +964,166 @@ document.querySelectorAll('input[required]').forEach((input) => {
         this.classList.remove('error');
     });
 });
+
+// ===== UTILITY FUNCTIONS =====
+// Show loading overlay
+function showLoading() {
+    const overlay = document.querySelector('.loading-overlay');
+    if (overlay) {
+        overlay.classList.add('active');
+    }
+}
+
+// Hide loading overlay
+function hideLoading() {
+    const overlay = document.querySelector('.loading-overlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+}
+
+// Set button loading state
+function setButtonLoading(button, isLoading) {
+    if (isLoading) {
+        button.disabled = true;
+        button.classList.add('loading');
+        button.dataset.originalText = button.textContent;
+    } else {
+        button.disabled = false;
+        button.classList.remove('loading');
+        if (button.dataset.originalText) {
+            button.textContent = button.dataset.originalText;
+        }
+    }
+}
+
+// Validate email format
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+}
+
+// Add input validation feedback
+function addInputFeedback(input, isValid, message = '') {
+    const formGroup = input.closest('.form-group');
+    if (!formGroup) return;
+
+    // Remove existing feedback
+    const existingFeedback = formGroup.querySelector('.input-feedback');
+    if (existingFeedback) existingFeedback.remove();
+
+    // Add new feedback
+    if (isValid !== null) {
+        input.classList.remove('error', 'success');
+        input.classList.add(isValid ? 'success' : 'error');
+
+        const feedback = document.createElement('span');
+        feedback.className = `input-feedback ${isValid ? 'success' : 'error'}`;
+        feedback.textContent = isValid ? '✓' : '✗';
+        feedback.title = message;
+        formGroup.appendChild(feedback);
+    }
+}
+
+// Enhanced form validation
+function enhanceFormValidation(form) {
+    const inputs = form.querySelectorAll('input[type="email"], input[type="text"], input[type="password"]');
+    
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            const value = this.value.trim();
+            
+            if (this.hasAttribute('required') && !value) {
+                addInputFeedback(this, false, 'This field is required');
+            } else if (this.type === 'email' && value) {
+                const isValid = validateEmail(value);
+                addInputFeedback(this, isValid, isValid ? 'Valid email' : 'Invalid email format');
+            } else if (value) {
+                addInputFeedback(this, true, 'Looks good!');
+            }
+        });
+
+        input.addEventListener('input', function() {
+            if (this.classList.contains('error')) {
+                this.classList.remove('error');
+                const feedback = this.closest('.form-group')?.querySelector('.input-feedback');
+                if (feedback) feedback.remove();
+            }
+        });
+    });
+}
+
+// Apply enhanced validation to all forms on page
+document.querySelectorAll('form').forEach(form => {
+    if (!form.hasAttribute('data-validation-enhanced')) {
+        enhanceFormValidation(form);
+        form.setAttribute('data-validation-enhanced', 'true');
+    }
+});
+
+// Keyboard shortcuts for accessibility
+document.addEventListener('keydown', function(e) {
+    // Alt + H = Home
+    if (e.altKey && e.key === 'h') {
+        e.preventDefault();
+        window.location.href = 'index.html';
+    }
+    
+    // Alt + L = Leaderboard
+    if (e.altKey && e.key === 'l') {
+        e.preventDefault();
+        window.location.href = 'leaderboard.html';
+    }
+    
+    // Alt + P = Profile (if logged in)
+    if (e.altKey && e.key === 'p') {
+        e.preventDefault();
+        if (localStorage.getItem('authToken')) {
+            window.location.href = 'participant.html';
+        }
+    }
+});
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Auto-hide success messages after 5 seconds
+document.querySelectorAll('.success-message').forEach(msg => {
+    if (msg.style.display !== 'none') {
+        setTimeout(() => {
+            msg.style.display = 'none';
+        }, 5000);
+    }
+});
+
+// Session timeout warning (30 minutes)
+let sessionTimer;
+function resetSessionTimer() {
+    clearTimeout(sessionTimer);
+    sessionTimer = setTimeout(() => {
+        if (localStorage.getItem('authToken')) {
+            alert('Your session has been inactive for 30 minutes. Please login again if needed.');
+        }
+    }, 30 * 60 * 1000); // 30 minutes
+}
+
+// Reset timer on user activity
+['mousedown', 'keydown', 'scroll', 'touchstart'].forEach(event => {
+    document.addEventListener(event, resetSessionTimer, true);
+});
+
+// Initialize session timer
+if (localStorage.getItem('authToken')) {
+    resetSessionTimer();
+}

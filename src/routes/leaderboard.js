@@ -17,27 +17,38 @@ router.get('/', async (req, res) => {
         // Get participant details for each score
         const scoreWithDetails = await Promise.all(
             scores.map(async (score) => {
-                const participant = await Participant.findOne(
-                    { registerNumber: score.registerNumber },
-                    'name registerNumber department participantCode',
-                    { lean: true }
-                );
+                try {
+                    const participant = await Participant.findOne(
+                        { registerNumber: score.registerNumber },
+                        'name registerNumber department participantCode',
+                        { lean: true }
+                    );
 
-                return {
-                    ...score,
-                    name: participant?.name || 'Unknown',
-                    department: participant?.department || 'Unknown',
-                    participantCode: participant?.participantCode || 'Unknown',
-                    totalPuzzles: score.puzzlesSolved?.length || 0,
-                    formattedTime: score.timeTaken
-                        ? `${Math.floor(score.timeTaken / 60)}h ${score.timeTaken % 60}m`
-                        : '--',
-                    lastStageCompleted: score.completedStages?.length
-                        ? score.completedStages[
-                              score.completedStages.length - 1
-                          ]
-                        : null,
-                };
+                    return {
+                        ...score,
+                        name: participant?.name || 'Unknown',
+                        department: participant?.department || 'Unknown',
+                        participantCode: participant?.participantCode || 'Unknown',
+                        totalPuzzles: Array.isArray(score.puzzlesSolved) ? score.puzzlesSolved.length : 0,
+                        formattedTime: score.timeTaken
+                            ? `${Math.floor(score.timeTaken / 60)}h ${score.timeTaken % 60}m`
+                            : '--',
+                        lastStageCompleted: Array.isArray(score.completedStages) && score.completedStages.length
+                            ? score.completedStages[score.completedStages.length - 1]
+                            : null,
+                    };
+                } catch (err) {
+                    console.error('Error processing score for', score.registerNumber, err);
+                    return {
+                        ...score,
+                        name: 'Unknown',
+                        department: 'Unknown',
+                        participantCode: 'Unknown',
+                        totalPuzzles: 0,
+                        formattedTime: '--',
+                        lastStageCompleted: null,
+                    };
+                }
             })
         );
 
@@ -80,13 +91,14 @@ router.get('/', async (req, res) => {
         });
     } catch (error) {
         console.error('Leaderboard error:', {
-            error: error.message,
+            message: error.message,
             stack: error.stack,
+            name: error.name,
         });
         res.status(500).json({
             success: false,
             message: 'Failed to fetch leaderboard',
-            error: error.message,
+            error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
         });
     }
 });

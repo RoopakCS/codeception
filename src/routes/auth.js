@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const { JWT_SECRET } = require('../middleware/auth');
+const { JWT_SECRET, authenticateToken } = require('../middleware/auth');
 const Participant = require('../models/participant');
 const Score = require('../models/score');
 
@@ -115,7 +115,6 @@ router.post('/register', async (req, res) => {
 // Login route
 router.post('/login', async (req, res) => {
     try {
-        console.log('Received login request:', req.body);
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -171,6 +170,62 @@ router.post('/login', async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Server error during login',
+        });
+    }
+});
+
+// Get participant stats
+router.get('/participant-stats', authenticateToken, async (req, res) => {
+    try {
+        // Get participant from token
+        const participant = await Participant.findById(req.user.id);
+        
+        if (!participant) {
+            return res.status(404).json({
+                success: false,
+                message: 'Participant not found',
+            });
+        }
+
+        // Get score data
+        const scoreData = await Score.findOne({
+            registerNumber: participant.registerNumber,
+        }).lean();
+
+        if (!scoreData) {
+            return res.json({
+                success: true,
+                score: 0,
+                puzzlesSolved: 0,
+                timeSpent: 0,
+                completedStages: [],
+                status: 'pending',
+            });
+        }
+
+        // Calculate time spent
+        let timeSpent = scoreData.timeTaken || 0;
+        if (scoreData.startTime && !scoreData.completionTime) {
+            const currentTime = new Date();
+            const startTime = new Date(scoreData.startTime);
+            timeSpent = Math.floor((currentTime - startTime) / (1000 * 60)); // in minutes
+        }
+
+        res.json({
+            success: true,
+            score: scoreData.score || 0,
+            puzzlesSolved: Array.isArray(scoreData.completedStages) ? scoreData.completedStages.length : 0,
+            timeSpent: timeSpent,
+            completedStages: scoreData.completedStages || [],
+            status: scoreData.status || 'pending',
+            lastUpdated: scoreData.lastUpdated,
+        });
+    } catch (error) {
+        console.error('Participant stats error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch participant stats',
+            error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
         });
     }
 });
