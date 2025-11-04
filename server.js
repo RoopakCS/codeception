@@ -7,24 +7,66 @@ require('dotenv').config();
 // Initialize Express app
 const app = express();
 
+// Trust proxy for production deployment
+app.set('trust proxy', 1);
+
 // Middleware
+const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? [process.env.FRONTEND_URL, process.env.PRODUCTION_URL].filter(Boolean)
+    : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+
 app.use(
     cors({
-        origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+        origin: allowedOrigins,
         credentials: true,
     })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Security headers for production
+if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+        // Security headers
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        res.setHeader('X-Frame-Options', 'DENY');
+        res.setHeader('X-XSS-Protection', '1; mode=block');
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+        next();
+    });
+}
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI;
 
+if (!MONGODB_URI) {
+    console.error('FATAL ERROR: MONGODB_URI is not defined in environment variables');
+    process.exit(1);
+}
+
 mongoose
-    .connect(MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+    .connect(MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000,
+    })
+    .then(() => {
+        console.log('Connected to MongoDB');
+        console.log(`Database: ${mongoose.connection.name}`);
+    })
+    .catch((err) => {
+        console.error('MongoDB connection error:', err);
+        process.exit(1);
+    });
+
+// Handle MongoDB connection errors after initial connection
+mongoose.connection.on('error', (err) => {
+    console.error('MongoDB runtime error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.warn('MongoDB disconnected');
+});
 
 // Import routes
 const authRoutes = require('./src/routes/auth');
@@ -38,11 +80,16 @@ app.use('/api/challenges', challengeRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({
+    const healthcheck = {
         status: 'ok',
         message: 'Codeception 2025 API is running',
         timestamp: new Date().toISOString(),
-    });
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development',
+        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    };
+    
+    res.json(healthcheck);
 });
 
 // API hint endpoint (Stage 3)
@@ -156,23 +203,52 @@ app.use((req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
     console.error('Server error:', err);
-    res.status(500).json({
+    
+    // Don't leak error details in production
+    const message = process.env.NODE_ENV === 'production' 
+        ? 'Internal server error' 
+        : err.message;
+    
+    res.status(err.status || 500).json({
         success: false,
-        message: 'Internal server error',
+        message: message,
     });
 });
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server started on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
 // Graceful shutdown
-process.on('SIGINT', async () => {
-    console.log('\nShutting down gracefully...');
-    await mongoose.connection.close();
-    process.exit(0);
-});
+const gracefulShutdown = async (signal) => {
+    console.log(`\n${signal} received. Shutting down gracefully...`);
+    
+    // Close server
+    server.close(async () => {
+        console.log('HTTP server closed');
+        
+        // Close database connection
+        try {
+            await mongoose.connection.close();
+            console.log('MongoDB connection closed');
+            process.exit(0);
+        } catch (err) {
+            console.error('Error closing MongoDB connection:', err);
+            process.exit(1);
+        }
+    });
+    
+    // Force shutdown after 10 seconds
+    setTimeout(() => {
+        console.error('Forced shutdown due to timeout');
+        process.exit(1);
+    }, 10000);
+};
+
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
 module.exports = app;

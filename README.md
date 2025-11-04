@@ -224,26 +224,95 @@ For production, add authentication middleware to protect admin endpoints in `ser
 
 ## 🌐 Deployment
 
+### Production Checklist
+
+Before deploying to production, ensure you have:
+
+- [ ] Set `NODE_ENV=production` in your environment variables
+- [ ] Created a MongoDB Atlas database (or production MongoDB instance)
+- [ ] Generated a secure JWT_SECRET (minimum 32 characters)
+- [ ] Updated FRONTEND_URL and PRODUCTION_URL with your domain
+- [ ] Reviewed and secured all API endpoints
+- [ ] Tested the application locally in production mode
+- [ ] Set up proper error logging and monitoring
+
+### Environment Variables for Production
+
+Create a `.env` file with the following variables:
+
+```env
+NODE_ENV=production
+PORT=3000
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/codeception?retryWrites=true&w=majority
+JWT_SECRET=your_secure_random_string_minimum_32_characters
+FRONTEND_URL=https://your-domain.com
+PRODUCTION_URL=https://your-domain.com
+```
+
 ### MongoDB Atlas Setup
 
 1. Create a free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a new cluster
-3. Create a database user
-4. Whitelist your IP address
-5. Get your connection string
+2. Create a new cluster (free M0 tier available)
+3. Create a database user with read/write permissions
+4. Whitelist IP addresses (or allow from anywhere: `0.0.0.0/0`)
+5. Get your connection string from "Connect" → "Connect your application"
 6. Update `.env` with your connection string
+
+### Deploy to Render
+
+1. Push your code to GitHub
+2. Sign up at [Render](https://render.com)
+3. Create a new Web Service
+4. Connect your GitHub repository
+5. Configure:
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Environment**: Add all variables from `.env`
+6. Click "Create Web Service"
+
+### Deploy to Railway
+
+1. Sign up at [Railway](https://railway.app)
+2. Create a new project from GitHub repo
+3. Add environment variables in the "Variables" tab
+4. Railway will auto-deploy on push to main branch
 
 ### Deploy to Heroku
 
-1. Install Heroku CLI
-2. Login to Heroku: `heroku login`
-3. Create a new app: `heroku create codeception-2025`
-4. Set environment variables: `heroku config:set MONGODB_URI=your_connection_string`
+1. Install Heroku CLI: `npm install -g heroku`
+2. Login: `heroku login`
+3. Create app: `heroku create codeception-2025`
+4. Set config vars:
+   ```bash
+   heroku config:set NODE_ENV=production
+   heroku config:set MONGODB_URI=your_mongodb_uri
+   heroku config:set JWT_SECRET=your_jwt_secret
+   heroku config:set FRONTEND_URL=https://your-app.herokuapp.com
+   heroku config:set PRODUCTION_URL=https://your-app.herokuapp.com
+   ```
 5. Deploy: `git push heroku main`
+6. Open app: `heroku open`
 
-### Deploy to Vercel/Netlify
+### Deploy to DigitalOcean/VPS
 
-For serverless deployment, consider separating frontend and backend or using serverless functions.
+1. SSH into your server
+2. Install Node.js and MongoDB (or use MongoDB Atlas)
+3. Clone your repository
+4. Install dependencies: `npm install --production`
+5. Set up environment variables in `.env`
+6. Install PM2: `npm install -g pm2`
+7. Start with PM2: `pm2 start server.js --name codeception`
+8. Set up Nginx as reverse proxy
+9. Configure SSL with Let's Encrypt
+
+### Post-Deployment
+
+1. Test all API endpoints
+2. Verify database connections
+3. Check leaderboard updates
+4. Test authentication flow
+5. Monitor logs for errors
+6. Set up automated backups for MongoDB
 
 ## 📝 License
 
