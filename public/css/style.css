@@ -720,7 +720,7 @@ a[href*='participant.html'] {
 /* ===== FORM STYLES ===== */
 .form-container {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: 1fr ;
     gap: 2rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -1238,6 +1238,12 @@ a[href*='participant.html'] {
     cursor: pointer;
 }
 
+.form-group select option {
+    background: #1a1f35;
+    color: var(--text-main);
+    padding: 0.5rem;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -1309,6 +1315,7 @@ a[href*='participant.html'] {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    margin-top: 2rem;
 }
 
 .form-note {
