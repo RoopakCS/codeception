@@ -1782,6 +1782,182 @@ a[href*='participant.html'] {
     margin-bottom: 0.75rem;
 }
 
+/* ===== COORDINATORS SECTION ===== */
+.coordinators-section {
+    margin-top: 2rem;
+    padding: 0;
+}
+
+.coordinator-category {
+    margin-bottom: 2.5rem;
+}
+
+.coordinator-category h4 {
+    color: var(--accent-cyan);
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    padding-bottom: 0.75rem;
+}
+
+.coordinator-category h4::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: var(--accent-cyan);
+    margin: 0.5rem auto 0;
+}
+
+.coordinator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.coordinator-card {
+    background: rgba(13, 13, 29, 0.8);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.coordinator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.coordinator-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 8px 16px rgba(0, 255, 255, 0.2);
+}
+
+.coordinator-card:hover::before {
+    opacity: 1;
+}
+
+.coordinator-name {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.coordinator-details {
+    margin-top: 1rem;
+}
+
+.coordinator-contact {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+}
+
+.coordinator-contact a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.coordinator-contact a::before {
+    content: '📞';
+    position: absolute;
+    left: 0;
+    color: var(--accent-cyan);
+}
+
+.coordinator-contact a:hover {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+}
+
+.coordinator-social {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 255, 255, 0.1);
+    text-align: center;
+}
+
+.linkedin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent-cyan);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--accent-cyan);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.linkedin-link:hover {
+    background: rgba(0, 255, 255, 0.1);
+    color: #00ffff;
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments for coordinators */
+@media (max-width: 1024px) {
+    .coordinator-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .coordinators-section {
+        margin-top: 1.5rem;
+    }
+    
+    .coordinator-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .coordinator-category h4 {
+        font-size: 1.1rem;
+    }
+    
+    .coordinator-card {
+        padding: 1.25rem;
+    }
+    
+    .coordinator-name {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .coordinator-contact a {
+        font-size: 0.9rem;
+    }
+    
+    .linkedin-link {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
 /* ===== MISSION ACTIONS ===== */
 .mission-actions {
     display: flex;

@@ -36,21 +36,29 @@ function updateNavigation() {
             loginLink.style.display = 'block'; // Always show user avatar
         }
 
-        // Hide register CTAs
+        // Hide register CTAs (both links and elements with auth-hide class)
         document
-            .querySelectorAll('a[href="register.html"]:not(.nav-menu *)')
-            .forEach((link) => {
-                link.parentElement.classList.add('auth-hide');
+            .querySelectorAll('a[href="register.html"]:not(.nav-menu a), .auth-hide')
+            .forEach((element) => {
+                if (element.classList.contains('auth-hide')) {
+                    element.style.display = 'none';
+                } else {
+                    element.parentElement.classList.add('auth-hide');
+                }
             });
     } else {
         // User is not logged in
         if (loginLink) loginLink.innerHTML = '<a href="login.html">Login</a>';
 
-        // Show register CTAs
+        // Show register CTAs (both links and elements with auth-hide class)
         document
-            .querySelectorAll('a[href="register.html"]:not(.nav-menu *)')
-            .forEach((link) => {
-                link.parentElement.classList.remove('auth-hide');
+            .querySelectorAll('a[href="register.html"]:not(.nav-menu a), .auth-hide')
+            .forEach((element) => {
+                if (element.classList.contains('auth-hide')) {
+                    element.style.display = '';
+                } else {
+                    element.parentElement.classList.remove('auth-hide');
+                }
             });
     }
 }
