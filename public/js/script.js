@@ -162,11 +162,11 @@ function initRegistrationForm() {
                 // Show success message
                 document.getElementById('successMessage').style.display =
                     'block';
-                document.getElementById(
-                    'registeredParticipantCode'
-                ).textContent = result.participantCode;
-                document.getElementById('registeredName').textContent =
-                    result.name;
+                // document.getElementById(
+                //     'registeredParticipantCode'
+                // ).textContent = result.participantCode;
+                // document.getElementById('registeredName').textContent =
+                //     result.name;
 
                 // Store participant info and auth token in localStorage (do NOT store password)
                 localStorage.setItem('participantCode', result.participantCode);
